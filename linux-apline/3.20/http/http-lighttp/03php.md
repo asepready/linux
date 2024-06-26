@@ -1,10 +1,10 @@
 ```sh
-apk add --no-cache php7-fpm php7-bcmath php7-bz2 php7-ctype php7-curl php7-dom php7-enchant php7-exif php7-gd php7-gettext php7-gmp php7-iconv php7-imap php7-intl php7-json php7-mbstring php7-opcache php7-openssl php7-phar php7-posix php7-pspell php7-session php7-simplexml php7-sockets php7-sysvmsg php7-sysvsem php7-sysvshm php7-tidy php7-tokenizer php7-xml php7-xmlreader php7-xmlrpc php7-xmlwriter php7-xsl php7-zip php7-sqlite3 php7-gd php7-gmp php7-ldap php7-openssl php7-pdo_mysql php7-posix php7-sockets php7-xml
+apk add --no-cache php82-fpm php82-bcmath php82-bz2 php82-ctype php82-curl php82-dom php82-enchant php82-exif php82-gd php82-gettext php82-gmp php82-iconv php82-imap php82-intl php82-json php82-mbstring php82-opcache php82-openssl php82-phar php82-posix php82-pspell php82-session php82-simplexml php82-sockets php82-sysvmsg php82-sysvsem php82-sysvshm php82-tidy php82-tokenizer php82-xml php82-xmlreader php82-xmlrpc php82-xmlwriter php82-xsl php82-zip php82-sqlite3 php82-gd php82-gmp php82-ldap php82-openssl php82-pdo_mysql php82-posix php82-sockets php82-xml
 
-apk add php7-pdo php7-pdo_mysql php7-mysqli php7-pdo_sqlite php7-sqlite3 php7-odbc php7-pdo_odbc php7-dba
+apk add php82-pdo php82-pdo_mysql php82-mysqli php82-pdo_sqlite php82-sqlite3 php82-odbc php82-pdo_odbc php82-dba
 
 # Codeigniter
-apk add --no-cache php7-curl php7-fileinfo php7-gd php7-iconv php7-json php7-mbstring php7-mysqli php7-mysqlnd php7-tidy php7-zip php7-xml
+apk add --no-cache php82-curl php82-fileinfo php82-gd php82-iconv php82-json php82-mbstring php82-mysqli php82-mysqlnd php82-tidy php82-zip php82-xml
 
 sed -i -r 's|.*cgi.fix_pathinfo=.*|cgi.fix_pathinfo=1|g' /etc/php*/php.ini
 sed -i -r 's#.*safe_mode =.*#safe_mode = Off#g' /etc/php*/php.ini
@@ -33,19 +33,19 @@ sed -i -r 's|^.*pm.max_spare_servers =.*|pm.max_spare_servers = 8|g' /etc/php*/p
 sed -i -r 's|^.*pm.process_idle_timeout =.*|pm.process_idle_timeout = 8s|g' /etc/php*/php-fpm.d/www.conf
 sed -i -r 's|^.*pm =.*|pm = ondemand|g' /etc/php*/php-fpm.d/www.conf
 
-mkdir -p /var/run/php-fpm7/
-chown lighttpd:root /var/run/php-fpm7
+mkdir -p /var/run/php-fpm82/
+chown lighttpd:root /var/run/php-fpm82
 
-sed -i -r 's|^.*listen =.*|listen = /run/php-fpm7/php7-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
-sed -i -r 's|^pid =.*|pid = /run/php-fpm7/php7-fpm.pid|g' /etc/php*/php-fpm.conf
+sed -i -r 's|^.*listen =.*|listen = /run/php-fpm82/php82-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
+sed -i -r 's|^pid =.*|pid = /run/php-fpm82/php82-fpm.pid|g' /etc/php*/php-fpm.conf
 sed -i -r 's#^user =.*#user = lighttpd#g' /etc/php*/php.ini
 sed -i -r 's#^group =.*#group = lighttpd#g' /etc/php*/php.ini
 sed -i -r 's|^.*listen.owner =.*|listen.owner = lighttpd|g' /etc/php*/php-fpm.d/www.conf
 sed -i -r 's|^.*listen.group =.*|listen.group = lighttpd|g' /etc/php*/php-fpm.d/www.conf
 sed -i -r 's|^.*listen.mode =.*|listen.mode = 0660|g' /etc/php*/php-fpm.d/www.conf
 
-rc-update add php-fpm7 default
-service php-fpm7 restart
+rc-update add php-fpm82 default
+service php-fpm82 restart
 
 
 mkdir -p /var/www/localhost/cgi-bin
@@ -60,15 +60,15 @@ index-file.names += ( "index.php" )
 fastcgi.server = (
     ".php" => (
       "localhost" => (
-        "socket"                => "/var/run/php-fpm7/php7-fpm.sock",
+        "socket"                => "/var/run/php-fpm82/php82-fpm.sock",
         "broken-scriptfilename" => "enable"
       ))
 )
 EOF
 
-sed -i -r 's|^.*listen =.*|listen = /var/run/php-fpm7/php7-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
+sed -i -r 's|^.*listen =.*|listen = /var/run/php-fpm82/php82-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
 
-rc-service php-fpm7 restart
+rc-service php-fpm82 restart
 rc-service lighttpd restart
 
 echo "<?php echo phpinfo(); ?>" > /var/www/localhost/htdocs/info.php
