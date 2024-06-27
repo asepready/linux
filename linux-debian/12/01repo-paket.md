@@ -1,25 +1,22 @@
 ## 1. Konfigurasi Repositori melalui Arsip Debian
-```sh
-# client set time
-timedatectl
-timedatectl set-ntp n #
-timedatectl set-time 12:49:00 #manual set
-timedatectl set-timezone Asia/Jakarta
-```
-Buka dan edit untuk repo di /etc/yum.repos.d/
+Buka dan edit untuk /etc/apt/sources.list
 ```sh file
-# Add Repos using command
-yum install epel-release yum-utils -y
-```
-Lakukan pengecekan pembaruan reposetori'
-```sh
-yum update
+# /etc/apt/sources.list #laring
+deb http://debian.faztrain.id/ wheezy main
 ```
 
+Lakukan pengecekan pembaruan reposetori'
+```sh
+apt-get update
+timedatectl set-timezone Asia/Jakarta
+timedatectl set-ntp n #
+timedatectl set-time 12:49:00 #manual set
+timedatectl
+```
 ## 2 Pengujian Repository
 ```sh term
-yum search openssh-server
-yum install openssh-server
+apt-cache search openssh-server
+apt-get install openssh-server
 ```
 konfigurasi
 ```sh

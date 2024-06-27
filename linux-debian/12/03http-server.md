@@ -1,7 +1,7 @@
 # Layanan HTTP
 ## Install Paket Apache dan PHP5
 ```sh
-yum install httpd mod_ssl php
+apt-get install php5 apache2
 ```
 # 1. Konfigurasi Apache2
 ```sh file

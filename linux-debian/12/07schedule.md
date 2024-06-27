@@ -1,38 +1,13 @@
 ## Layanan Penjadwal Backup dengan Cron & NTP(Network Time Protocol)
-## Install NTP Packages
 ```sh
-yum install -y ntp
-```
-## Configure NTP Servers
-vi /etc/ntp.conf
-```sh
-....
-#server 0.centos.pool.ntp.org iburst
-#server 1.centos.pool.ntp.org iburst
-#server 2.centos.pool.ntp.org iburst
-#server 3.centos.pool.ntp.org iburst
-server 0.id.pool.ntp.org iburst
-server 1.id.pool.ntp.org iburst
-server 2.id.pool.ntp.org iburst
-server 3.id.pool.ntp.org iburst
-```
+apt-get install ntpdate
 
-```sh
-systemctl enable ntpd && systemctl start ntpd && systemctl status ntpd
-ntpq -p
-timedatectl set-timezone Asia/Jakarta
+#konfig ntp
+ntpdate id.pool.ntp.org
+
+#buat file backup
+mkdir ~/backup
 ```
-
-## client set time
-
-```sh 
-timedatectl
-timedatectl set-ntp n #
-timedatectl set-time 12:49:00 #manual set
-timedatectl set-timezone Asia/Jakarta
-timedatectl set-ntp on #sin
-```
-
 ### konfigurasi crontab untuk backup sysadmin
 konfigurasi crontab untuk penjadwalan backup “sysadmin” otomatis yang dilakukan tiap tanggal 1 pada jam 09.00 pagi di setiap bulan.
 ```sh file

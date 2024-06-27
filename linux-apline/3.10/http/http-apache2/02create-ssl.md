@@ -1,2 +1,2 @@
 ```sh
-apk add --no-cache openssl apache2-ssl
+apk add --no-cache apache2-ssl

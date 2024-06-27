@@ -1,20 +1,20 @@
 # Bind9
 ## Install Paket Bind9
 ```sh
-yum install bind bind-utils -y
+apt-get install bind9
 ```
-Lakukan konfigurasi dan edit file di /etc/named.conf
+Lakukan konfigurasi dan edit file di /etc/bind/named.conf.default-zones
 ```sh file
 // Baris zona domain abcnet-1.id
 zone "abcnet-1.id" {
 type master;
-file "/var/named/named.abcnet";
+file "/etc/bind/main/db.abcnet";
 };
 ```
 Salin dan modifikasi file zona forward pada /etc/bind/db.local ke /etc/bind/main/db.abcnet
 ```sh
 #salin file
-cp /var/named/named.localhost /var/named/named.abcnet
+cp /etc/bind/db.local /etc/bind/main/db.abcnet
 
 #modif file
 $TTL 604800

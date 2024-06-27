@@ -1,6 +1,8 @@
 # Layanan DataBase Management System (DBMS)
 ## Install Paket
 ```sh
-yum install phpmyadmin mariadb-server
+apt install mariadb-server
+
+systemctl start mariadb && systemctl enable mariadb 
 chmod -R 777 /var/lib/phpmyadmin/tmp
 ```

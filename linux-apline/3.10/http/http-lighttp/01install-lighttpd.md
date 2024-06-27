@@ -13,6 +13,7 @@ sed -i -r 's#.*status.config-url.*=.*#status.config-url  = "/serverinfo/server-c
 
 mkdir -p /var/www/localhost/cgi-bin
 sed -i -r 's#\#.*mod_alias.*,.*#    "mod_alias",#g' /etc/lighttpd/lighttpd.conf
+
 sed -i -r 's#.*include "mod_cgi.conf".*#   include "mod_cgi.conf"#g' /etc/lighttpd/lighttpd.conf
 
 mkdir -p /var/lib/lighttpd

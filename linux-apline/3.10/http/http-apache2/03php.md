@@ -63,9 +63,9 @@ Add the following lines to /etc/apache2/httpd.conf:
     SetHandler "proxy:fcgi://127.0.0.1:9000"
 </FilesMatch>
 ```
-Comment out the following lines in /etc/apache2/conf.d/php8-module.conf:
+Comment out the following lines in /etc/apache2/conf.d/php7-module.conf:
 ```sh
- #LoadModule php_module modules/mod_php8.so
+ #LoadModule php_module modules/mod_php7.so
  
  #DirectoryIndex index.php index.html
  #<FilesMatch \.php$>

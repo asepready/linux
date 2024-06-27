@@ -6,6 +6,14 @@ ifconfig eth1 up
 Buka dan edit untuk hostname di /etc/network/interfaces
 ```sh interface
 # The seconds network interface
+auto eth0
+iface eth0 inet static
+        address 10.3.1.1
+        network 10.3.1.0
+        netmask 255.255.255.0
+        gateway 10.3.1.111
+        dns-domain google.com
+        dns-nameservers 10.3.1.111 8.8.8.8
 ```
 Lakukan restart pada network
 ```sh term
