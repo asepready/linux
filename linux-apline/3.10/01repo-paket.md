@@ -18,5 +18,5 @@ apk update --no-cache
 ```sh
 apk add --no-cache tzdata
 ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
-sed -i "s|;*date.timezone =.*|date.timezone = ${TIMEZONE}|i" /etc/php*/php.ini
+sed -i "s|;*date.timezone =.*|date.timezone = Asia/Jakarta|i" /etc/php*/php.ini
 ```

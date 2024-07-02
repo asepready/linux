@@ -1,9 +1,57 @@
-lighttpd-mod_auth
-apk add --no-cache nagios nagios-web nagios-plugins-all php7-mysqli
-apk add --no-cache php7-common php7-session php7-iconv php7-json php7-gd php7-curl php7-xml php7-mysqli php7-imap php7-cgi fcgi php7-pdo php7-pdo_mysql php7-soap php7-posix php7-gettext php7-ldap php7-ctype php7-dom php7-simplexml
+https://wiki.alpinelinux.org/wiki/Setting_up_A_Network_Monitoring_and_Inventory_System
+Install lighttpd
+Basic Installation
 
-rm -rf /var/www/localhost/htdocs
-ln -s /usr/share/nagios/htdocs/ /var/www/localhost/htdocs/
+For installing the additional packages first activate community packages and update the package index
 
-chown apache:apache /var/www/localhost/htdocs/
-chown apache:apache /etc/nagios/
+Install the required packages:
+
+# apk add lighttpd lighttpd-mod_auth php82 fcgi php82-cgi
+Configure Lighttpd
+
+Edit lighttpd.conf (/etc/lighttpd/lighttpd.conf) and uncomment the line:
+
+Contents of /etc/lighttpd/lighttpd.conf
+...
+include "mod_fastcgi.conf"
+...
+
+Edit mod_fastcgi.conf (/etc/lighttpd/mod_fastcgi.conf), find and change /usr/bin/php-cgi to /usr/bin/php-cgi82.
+
+Contents of /etc/lighttpd/mod_fastcgi.conf
+...
+"bin-path" => "/usr/bin/php-cgi82" # php-cgi
+...
+Start lighttpd service and add it to default runlevel
+
+# rc-service lighttpd start 
+# rc-update add lighttpd default
+Configure MySQL
+
+/usr/bin/mysql_install_db --user=mysql
+rc-service mysql start && rc-update add mysql default
+/usr/bin/mysqladmin -u root password 'password'
+
+Install Nagios, nagios-plugins and Nagiosql and other needed packages
+
+apk add nagios nagios-web nagios-plugins nagiosql php-mysqli php-mysql
+
+Create soft-link for nagiosql virtual host'
+
+ln -s /usr/share/webapps/nagiosql /var/www/localhost/htdocs/nagiosql
+
+Change permissions for nagiosql
+
+chown lighttpd:lighttpd /usr/share/webapps/nagiosql/config
+
+Browse to http://localhost/nagiosql and follow the setup instructions. Create folder /usr/share/webapps/openaudit and link to virtual host folder
+
+mkdir /usr/share/webapps/openaudit
+chown lighttpd:lighttpd /usr/share/webapps/openaudit
+ln -s /usr/share/webapps/openaudit /var/www/localhost/htdocs/openaudit</nowiki>
+
+Download openaudit from https://downloads.sourceforge.net/open-audit/openauditrelease-09.12.23-SVN1233.zip and extract to /usr/share/webapps/openaudit.
+
+On a Windows server, create scheduled tasks to run ping-sweep-main.bat, lookup-main.bat and insert-hosts-main.bat on a regular basis. Since the insert-hosts-main.bat file runs RPC calls against other Windows servers, at the moment this section needs to run on a Windows server...
+
+To be continued...

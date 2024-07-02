@@ -1,9 +1,5 @@
 ```sh 
-apk add --no-cache mariadb-server
-ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
-sed -i "s|;*date.timezone =.*|date.timezone = ${TIMEZONE}|i" /etc/php*/php.ini
-
-mysql_install_db --user=mysql --datadir=/var/lib/mysql
+apt install mariadb-server
 
 systemctl start mariadb 
 
@@ -23,19 +19,19 @@ EOF
 
 cat > /etc/my.cnf.d/mariadb-server-default-highload.cnf << EOF
 [mysqld]
-collation_server = utf8mb4_unicode_ci
-character_set_server = utf8mb4
-max_heap_table_size = 32M
-tmp_table_size      = 32M
-join_buffer_size    = 62M
-innodb_file_format  = Barracuda
-innodb_large_prefix = 1
-innodb_buffer_pool_size = 512M
-innodb_flush_log_at_timeout = 3
-innodb_read_io_threads  = 32
+character-set-server         = utf8mb4
+collation-server             = utf8mb4_general_ci
+max_heap_table_size          = 32M
+tmp_table_size               = 32M
+join_buffer_size             = 62M
+innodb_file_format           = Barracuda
+innodb_large_prefix          = 1
+innodb_buffer_pool_size      = 512M
+innodb_flush_log_at_timeout  = 3
+innodb_read_io_threads       = 32
 innodb_buffer_pool_instances = 1
-innodb_io_capacity     = 5000
-innodb_io_capacity_max = 10000
+innodb_io_capacity           = 5000
+innodb_io_capacity_max       = 10000
 EOF
 
 systemctl enable mariadb 

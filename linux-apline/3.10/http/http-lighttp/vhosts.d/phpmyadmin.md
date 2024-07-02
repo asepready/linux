@@ -10,7 +10,7 @@ $HTTP["url"] =~ "^/phpmyadmin($|/)" {
     auth.backend.htpasswd.userfile = "/path/to/your/.htpasswd"
     auth.require = ( "" => (
         "method" => "basic",
-        "realm" => "PhpMyAdmin",
+        "realm" => "phpmyadmin",
         "require" => "valid-user"
     ))
 }
