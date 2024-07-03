@@ -4,7 +4,7 @@ This production environment will handle only the necessary packages... so no doc
 - added the service to the default runlevel, not to boot, because need networking activated
 - start the web server service
 ```sh
-apk add lighttpd
+apk add --no-cache lighttpd
 mkdir -p /var/www/localhost/htdocs /var/log/lighttpd /var/lib/lighttpd
 chown -R lighttpd:lighttpd /var/www/localhost/ /var/log/lighttpd /var/lib/lighttpd 
 rc-update add lighttpd default;rc-service lighttpd restart
@@ -19,6 +19,7 @@ Taking care of the status web server: those special pages are just minimal info 
 ```sh
 sed -i -r 's#\#.*mod_status.*,.*#    "mod_status",#g' /etc/lighttpd/lighttpd.conf
 
+mkdir -p /var/www/localhost/htdocs/stats
 sed -i -r 's#.*status.status-url.*=.*#status.status-url  = "/stats/server-status"#g' /etc/lighttpd/lighttpd.conf
 
 sed -i -r 's#.*status.config-url.*=.*#status.config-url  = "/stats/server-config"#g' /etc/lighttpd/lighttpd.conf
@@ -76,7 +77,7 @@ We need to created a self-signed certificate if we do not already have one:
 6. activate the mod_redirect in case of global http to https redirections
 7. restart the service to see changes
 ```sh
-apk add openssl
+apk add --no-cache openssl
 
 mkdir -p /etc/ssl/certs/
 openssl req -x509 -days 1460 -nodes -newkey rsa:4096 \
@@ -102,6 +103,8 @@ EOF
 sed -i -r 's#\#.*mod_redirect.*,.*#    "mod_redirect",#g' /etc/lighttpd/lighttpd.conf
 
 checkssl="";checkssl=$(grep 'include "mod_ssl.conf' /etc/lighttpd/lighttpd.conf);[[ "$checkssl" != "" ]] && echo listo || sed -i -r 's#.*include "mime-types.conf".*#include "mime-types.conf"\ninclude "mod_ssl.conf"#g' /etc/lighttpd/lighttpd.conf
+
+sed -i -r 's#ssl.pemfile.*=.*#ssl.pemfile   = "/etc/ssl/certs/localhost.pem"#g' /etc/lighttpd/lighttpd.conf
 
 rc-service lighttpd restart
 ```
