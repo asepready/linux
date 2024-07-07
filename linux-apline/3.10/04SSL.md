@@ -44,13 +44,13 @@ In particular, a private key generates a digital signature for the certificate. 
 
 To that end, the openssl command-line tool (CLI) provides the genrsa command to generate RSA private keys:
 ```sh
-$ openssl genrsa -out server.key 2048
-Generating RSA private key, 2048 bit long modulus (2 primes)
+$ openssl genrsa -out server.key 4096
+Generating RSA private key, 4096 bit long modulus (2 primes)
 ...+++++
 ...................................................................+++++
 e is 65537 (0x010001)
 ```
-Running the genrsa command generates a private key and saves it to the server.key file. The recommended key size for enhanced security is 2048 bits, as also used in the command
+Running the genrsa command generates a private key and saves it to the server.key file. The recommended key size for enhanced security is 4096 bits, as also used in the command
 
 Now, let’s leverage the -check option to confirm the creation of the server.key file:
 freestar
@@ -116,12 +116,12 @@ Hence, we’ve created a CSR for the machine.
 
 Finally, we can create the self-signed certificate using the existing private key (server.key) and CSR (server.csr):
 ```sh
-$ openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+$ openssl x509 -req -days 21900 -in server.csr -signkey server.key -out server.crt
 Signature ok
 subject=C = RO, ST = Bucharest, O = Baeldung, OU = Linux, CN = baeldung.com, emailAddress = email@baeldung.com
 Getting Private key
 ```
-The x509 command instructs openssl that we’re working with X.509 certificates and the SSL (TLS) encryption format. Further, we set the certificate validity period to 365 days using the -days option.
+The x509 command instructs openssl that we’re working with X.509 certificates and the SSL (TLS) encryption format. Further, we set the certificate validity period to 21900 days using the -days option.
 
 Consequently, server.crt stores the generated certificate. Let’s verify its creation:
 ```sh
@@ -204,11 +204,11 @@ Lakukan buat konfigurasi file seperti berikut ini:
 │   │   └── apk.pem
 
 
-# Generate Keys expired 365 days
+# Generate Keys expired 21900 days
 openssl req -new -newkey rsa:4096 -nodes -keyout apk.key -out apk.csr
-openssl x509 -req -sha256 -days 365 -in apk.csr -signkey apk.key -out apk.pem
+openssl x509 -req -sha256 -days 21900 -in apk.csr -signkey apk.key -out apk.pem
 # Generate PEM
-openssl dhparam -out apk.pem 2048
+openssl dhparam -out apk.pem 4096
 
 openssl pkcs12 -export -out ca-apk.pfx -inkey apk.key -in apk.crt
 openssl pkcs12 -nokeys -cacerts -in ca-apk.pfx  -out ca-apk.pem
