@@ -1,0 +1,14 @@
+#default
+apk add --no-cache musl busybox alpine-baselayout alpine-keys libcrypto1.1 libssl1.1 ca-certificates-cacert libtls-standalone ssl_client zlib apk-tools scanelf musl-utils libc-utils openrc alpine-conf busybox-suid busybox-initscripts alpine-base
+
+# tools
+apk add --no-cache mysql-dev dos2unix help2man
+apk add --no-cache build-base gcc autoconf automake make libtool net-snmp-dev
+
+# compaile
+./configure
+make
+make install
+chown root:root /usr/local/spine/bin/spine
+chmod +s /usr/local/spine/bin/spine
+
