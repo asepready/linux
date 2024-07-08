@@ -5,8 +5,6 @@ This production environment will handle only the necessary packages... so no doc
 - start the web server service
 ```sh
 apk add --no-cache lighttpd
-mkdir -p /var/www/localhost/htdocs /var/log/lighttpd /var/lib/lighttpd
-chown -R lighttpd:lighttpd /var/www/localhost/ /var/log/lighttpd /var/lib/lighttpd 
 rc-update add lighttpd default;rc-service lighttpd restart
 echo "it works" > /var/www/localhost/htdocs/index.html
 ```
@@ -20,6 +18,7 @@ Taking care of the status web server: those special pages are just minimal info 
 sed -i -r 's#\#.*mod_status.*,.*#    "mod_status",#g' /etc/lighttpd/lighttpd.conf
 
 mkdir -p /var/www/localhost/htdocs/stats
+
 sed -i -r 's#.*status.status-url.*=.*#status.status-url  = "/stats/server-status"#g' /etc/lighttpd/lighttpd.conf
 
 sed -i -r 's#.*status.config-url.*=.*#status.config-url  = "/stats/server-config"#g' /etc/lighttpd/lighttpd.conf
@@ -39,6 +38,8 @@ mkdir -p /var/www/localhost/cgi-bin
 sed -i -r 's#\#.*mod_alias.*,.*#    "mod_alias",#g' /etc/lighttpd/lighttpd.conf
 
 sed -i -r 's#.*include "mod_cgi.conf".*#   include "mod_cgi.conf"#g' /etc/lighttpd/lighttpd.conf
+
+sed -i -r 's#.*dir-listing.activate.*=.*#dir-listing.activate  = "enable"#g' /etc/lighttpd/lighttpd.conf
 
 rc-service lighttpd restart
 ```
@@ -84,15 +85,15 @@ openssl req -x509 -days 1460 -nodes -newkey rsa:4096 \
    -subj "/C=ID/ST=Bangka-Belitung/L=Pangkalpinang/O=Goverment/OU=Systemas:DISKOMINFO/CN=localhost" \
    -keyout /etc/ssl/certs/localhost.pem -out /etc/ssl/certs/localhost.pem
 
-chown -Rv lighttpd:root /etc/lighttpd/dbms/;chmod 640 /etc/lighttpd/dbms/*
-
-chmod 640 /etc/ssl/certs/localhost.pem
+chmod 400 /etc/ssl/certs/localhost.pem
 
 cat > /etc/lighttpd/mod_ssl.conf << EOF
 server.modules += ("mod_openssl")
+var.confdir = "/etc/lighttpd"
 \$SERVER["socket"] == "0.0.0.0:443" {
     ssl.engine  = "enable"
-    ssl.pemfile = "/etc/ssl/certs/localhost.pem"
+    ssl.pemfile =  var.confdir + "/etc/ssl/certs/localhost.pem"
+    ssl.ca-file = var.confdir + "/DigiCertCA.crt"
     ssl.cipher-list = "ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM"
     ssl.honor-cipher-order = "enable"
 }

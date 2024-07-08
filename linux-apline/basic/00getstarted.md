@@ -6,6 +6,7 @@ ifconfig eth0 up
 Buka dan edit untuk hostname di /etc/network/interfaces
 ```sh interface
 auto eth0
+#iface eth0 inet dhcp
 iface eth0 inet static
 	address 9.9.9.3
 	netmask 255.255.255.0

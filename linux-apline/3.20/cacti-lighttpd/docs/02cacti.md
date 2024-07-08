@@ -1,6 +1,7 @@
 ```sh
 apk add --no-cache bash attr dialog binutils findutils readline lsof less utmps curl tzdata
 ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
+
 export PAGER=less
 export MIBS=ALL
 
@@ -8,7 +9,7 @@ export MIBS=ALL
 ## Webserver
 sed -i -r 's#\#.*server.port.*=.*#server.port          = 80#g' /etc/lighttpd/lighttpd.conf
 
-sed -i -r 's#.*server.stat-cache-engine.*=.*# server.stat-cache-engine = "fam"#g' /etc/lighttpd/lighttpd.conf
+sed -i -r 's#.*server.stat-cache-engine.*=.*# server.stat-cache-engine = "inotify"#g' /etc/lighttpd/lighttpd.conf
 
 sed -i -r 's#\#.*server.event-handler = "linux-sysepoll".*#server.event-handler = "linux-sysepoll"#g' /etc/lighttpd/lighttpd.conf
 
@@ -20,12 +21,18 @@ echo listo || sed -i -r 's#server settings.*#server settings"\nserver.network-ba
 
 rc-service lighttpd restart
 
-## PHP7-FPM Cacti
-apk add --no-cache php7-fpm php7-pear php7-ctype php7-gettext php7-gd php7-gmp php7-json php7-ldap php7-mbstring php7-openssl php7-pdo php7-pdo_mysql php7-mysqli php7-session php7-simplexml php7-sockets php7-xml php7-zlib php7-posix php7-intl php7-pcntl php7-snmp
+## PHP82-FPM Cacti
+apk add --no-cache cacti cacti-lang cacti-setup
+apk add --no-cache bash busybox coreutils net-snmp-tools perl rrdtool ttf-dejavu php82-snmp
 
-apk add --no-cache php7-bcmath php7-bz2 php7-curl php7-dom php7-enchant php7-exif php7-iconv php7-imap php7-opcache php7-phar php7-pspell php7-sysvmsg php7-sysvsem php7-sysvshm php7-tidy php7-tokenizer php7-xmlreader php7-xmlrpc php7-xmlwriter php7-xsl php7-zip php7-opcache php7-calendar php7-fileinfo php7-ftp php7-mysqlnd php7-shmop php7-pdo_sqlite php7-sqlite3 php7-odbc php7-pdo_odbc php7-dba
+apk add --no-cache php82-fpm
 
-#sed -i -r 's|.*extension_dir =.*|extension_dir = /usr/lib/php7/modules |g' /etc/php*/php.ini
+# Require Cacti
+apk add --no-cache php82-pear php82-ctype php82-gettext php82-gd php82-gmp php82-json php82-ldap php82-mbstring php82-openssl php82-pdo php82-pdo_mysql php82-mysqli php82-session php82-simplexml php82-sockets php82-xml php82-zlib php82-posix php82-intl php82-pcntl php82-snmp
+
+apk add --no-cache php82-bcmath php82-bz2 php82-curl php82-dom php82-enchant php82-exif php82-iconv php82-imap php82-opcache php82-phar php82-pspell php82-sysvmsg php82-sysvsem php82-sysvshm php82-tidy php82-tokenizer php82-xmlreader php82-xmlwriter php82-xsl php82-zip php82-opcache php82-calendar php82-fileinfo php82-ftp php82-mysqlnd php82-shmop php82-pdo_sqlite php82-sqlite3 php82-odbc php82-pdo_odbc php82-dba
+
+#sed -i -r 's|.*extension_dir =.*|extension_dir = /usr/lib/php82/modules |g' /etc/php*/php.ini
 sed -i -r 's|.*cgi.fix_pathinfo=.*|cgi.fix_pathinfo=1|g' /etc/php*/php.ini
 
 sed -i -r 's#.*safe_mode =.*#safe_mode = Off#g' /etc/php*/php.ini
@@ -77,23 +84,26 @@ sed -i -r 's|^.*pm.process_idle_timeout =.*|pm.process_idle_timeout = 8s|g' /etc
 sed -i -r 's|^.*pm =.*|pm = ondemand|g' /etc/php*/php-fpm.d/www.conf
 
 
-mkdir -p /var/run/php-fpm7/;chown lighttpd:root /var/run/php-fpm7
+mkdir -p /var/run/php-fpm82/;chown lighttpd:root /var/run/php-fpm82
 
-sed -i -r 's|^.*listen =.*|listen = /run/php-fpm7/php7-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
+sed -i -r 's|^.*listen =.*|listen = /run/php-fpm82/php82-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
 
-sed -i -r 's|^pid =.*|pid = /run/php-fpm7/php7-fpm.pid|g' /etc/php*/php-fpm.conf
+sed -i -r 's|^pid =.*|pid = /run/php-fpm82/php82-fpm.pid|g' /etc/php*/php-fpm.conf
 
-sed -i -r 's#^user =.*#user = lighttpd#g' /etc/php*/php.ini
 
-sed -i -r 's#^group =.*#group = www-data#g' /etc/php*/php.ini
+sed -i -r 's#^user =.*#user = cacti#g' /etc/php*/php.ini
 
-sed -i -r 's|^.*listen.owner =.*|listen.owner = lighttpd|g' /etc/php*/php-fpm.d/www.conf
+sed -i -r 's#^group =.*#group = lighttpd#g' /etc/php*/php.ini
 
-sed -i -r 's|^.*listen.group =.*|listen.group = www-data|g' /etc/php*/php-fpm.d/www.conf
+sed -i -r 's|^.*listen.owner =.*|listen.owner = cacti|g' /etc/php*/php-fpm.d/www.conf
+
+sed -i -r 's|^.*listen.group =.*|listen.group = lighttpd|g' /etc/php*/php-fpm.d/www.conf
 
 sed -i -r 's|^.*listen.mode =.*|listen.mode = 0660|g' /etc/php*/php-fpm.d/www.conf
 
-rc-update add php-fpm7;service php-fpm7 restart
+rc-update add php-fpm82;service php-fpm82 restart
+
+
 
 sed -i -r 's#.*include "mod_fastcgi.conf".*#\#   include "mod_fastcgi.conf"#g' /etc/lighttpd/lighttpd.conf
 
@@ -104,15 +114,15 @@ server.modules += ( "mod_fastcgi" )
 fastcgi.server = (
     ".php" => (
       "localhost" => (
-        "socket"                => "/var/run/php-fpm7/php7-fpm.sock",
+        "socket"                => "/var/run/php-fpm82/php82-fpm.sock",
         "broken-scriptfilename" => "enable"
       ))
 )
 EOF
 
-sed -i -r 's|^.*listen =.*|listen = /var/run/php-fpm7/php7-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
+sed -i -r 's|^.*listen =.*|listen = /var/run/php-fpm82/php82-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
 
-rc-service php-fpm7 restart;rc-service lighttpd restart
+rc-service php-fpm82 restart;rc-service lighttpd restart
 
 echo "<?php echo phpinfo(); ?>" > /var/www/localhost/htdocs/info.php
 
@@ -123,23 +133,20 @@ cat > /etc/snmp/snmpd.conf << EOF
 view systemonly included .1.3.6.1.2.1.1
 view systemonly included .1.3.6.1.2.1.25.1
 rocommunity  public localhost
-rocommunity  public default -V systemonly
-sysLocation    Bolivar Upata Venezuela
-sysContact     infoadmin <info@pacificnetwork.com>
-sysServices    72
+rocommunity public default -V systemonly
+sysLocation Bolivar Upata Venezuela
+sysContact  infoadmin <info@asepready.id>
+sysServices 72
 EOF
 
 rc-update add snmpd default;rc-service snmpd restart
 
 ## Cacti
-apk add --no-cache bash busybox coreutils net-snmp-tools perl rrdtool ttf-dejavu php7-snmp
-
 cat > /etc/lighttpd/mod_cacti.conf << EOF
-server.indexfiles += ("index.php")
 alias.url += (
-     "/cacti"	    =>    "/var/www/cacti/"
+     "/cacti"	    =>    "/usr/share/webapps/cacti/"
 )
-\$HTTP["url"] =~ "^/cacti" {
+\$HTTP["url"] =~ "^/cacti/" {
     dir-listing.activate = "disable"
 }
 EOF
@@ -152,25 +159,22 @@ checkssl="";checkssl=$(grep 'include "mod_cacti.conf' /etc/lighttpd/lighttpd.con
 
 rc-service lighttpd restart
 
-chown -R cacti:lighttpd /home/cacti/rra/ /home/cacti/log/
-
 sed -i -r 's#\$database_default.*=.*;#\$database_default  = 'cacti';#g' /etc/cacti/config.php
 
 sed -i -r 's#\$database_username.*=.*;#\$database_username  = 'cactiuser';#g' /etc/cacti/config.php
 
-sed -i -r 's#\$database_password.*=.*;#\$database_password  = 'iD0&t6raY768mQ6';#g' /etc/cacti/config.php
+sed -i -r 's#\$database_password.*=.*;#\$database_password  = 'cactiuser';#g' /etc/cacti/config.php
 
-mkdir /var/log/cacti;chmod 777 /var/log/cacti;chmod 666 /var/log/cacti/*.log
+
+chown -R cacti:lighttpd /usr/share/webapps/cacti/ /var/lib/cacti/
+chmod 666 /var/log/cacti/*.log
 
 ## Pooler and crontab
 cd /etc/crontabs;vi root
 
 # copy to the end of the file:
-*/5 * * * * php /home/cacti/poller.php > /dev/null 2>&1
+*/5 * * * * php /usr/share/webapps/cacti/poller.php > /dev/null 2>&1
 
 #Plugins
+cd /usr/share/webapps/cacti/plugins/
 
-# After extract all of the files, change and fix permissions:
-cd /home/cacti/plugins/
-chown -R cacti:lighttpd /home/cacti/
-chown -R cacti:lighttpd /var/lib/cacti/
