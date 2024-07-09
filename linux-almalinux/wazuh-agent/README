@@ -1,0 +1,4 @@
+# Add the Wazuh repository
+```sh
+# Import the RSA key:
+ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime

@@ -1,0 +1,5 @@
+dnf install audit -y
+
+systemctl start auditd;systemctl enable auditd
+
+systemctl restart wazuh-agent

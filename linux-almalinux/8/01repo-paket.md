@@ -9,15 +9,10 @@ timedatectl set-timezone Asia/Jakarta
 Buka dan edit untuk repo di /etc/yum.repos.d/
 ```sh file
 # Add Repos using command
-sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-
-
-yum install epel-release yum-utils -y
-```
-Lakukan pengecekan pembaruan reposetori'
-```sh
-yum update -y
+dnf upgrade almalinux-release
+$ sudo rpm --import https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux
+dnf clean packages
+dnf update -y
 ```
 
 ## 2 Pengujian Repository
