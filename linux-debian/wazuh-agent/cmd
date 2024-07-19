@@ -1,0 +1,5 @@
+apt -y install auditd
+
+systemctl start auditd;systemctl enable auditd
+
+systemctl restart wazuh-agent

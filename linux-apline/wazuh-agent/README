@@ -1,0 +1,24 @@
+# Add the Wazuh repository
+```sh
+# Import the RSA key:
+apk add --no-cache tzdata
+ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
+wget -O /etc/apk/keys/alpine-devel@wazuh.com-633d7457.rsa.pub https://packages.wazuh.com/key/alpine-devel%40wazuh.com-633d7457.rsa.pub
+
+# Add the repository:
+echo "https://packages.wazuh.com/4.x/alpine/v3.12/main" >> /etc/apk/repositories
+
+
+# Update the metadata information:
+apk update
+
+# Install the Wazuh agent:
+apk add wazuh-agent
+
+# Edit the agent configuration to add the address of your Wazuh manager:
+export WAZUH_MANAGER="20.122.0.4" && sed -i "s|MANAGER_IP|$WAZUH_MANAGER|g" /var/ossec/etc/ossec.conf
+
+# SystemdSysV initNo service manager
+/var/ossec/bin/wazuh-control start
+
+# Recommended action - Disable Wazuh updates Packages
