@@ -1,4 +1,7 @@
 # Add the Wazuh repository
+
+https://wazuh.com/blog/monitoring-network-devices/
+
 ```sh
 # Import the RSA key:
 ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime

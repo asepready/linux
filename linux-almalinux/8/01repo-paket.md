@@ -9,8 +9,7 @@ timedatectl set-timezone Asia/Jakarta
 Buka dan edit untuk repo di /etc/yum.repos.d/
 ```sh file
 # Add Repos using command
-dnf upgrade almalinux-release
-$ sudo rpm --import https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux
+rpm --import https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux
 dnf clean packages
 dnf update -y
 ```

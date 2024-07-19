@@ -55,6 +55,7 @@ cat > /etc/logrotate.d/network-logs << EOF
 }
 EOF
 
+adduser syslog --system
 rsyslogd -f /etc/rsyslog.conf -N1
 
 rc-update add rsyslog;service rsyslog start
