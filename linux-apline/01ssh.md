@@ -1,4 +1,5 @@
 ## Konfigurasi SSH
+```sh
 apk search --no-cache openssh openssh-server openssh-sftp-server
 apk add --no-cache openssh openssh-server openssh-sftp-server
 rc-update add sshd

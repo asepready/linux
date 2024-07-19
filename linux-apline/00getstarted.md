@@ -8,9 +8,9 @@ Buka dan edit untuk hostname di /etc/network/interfaces
 auto eth0
 #iface eth0 inet dhcp
 iface eth0 inet static
-	address 9.9.9.3
-	netmask 255.255.255.0
-	gateway 9.9.9.99
+	address x.x.x.x
+	netmask x.x.x.x
+	gateway x.x.x.x
 ```
 Lakukan restart pada network
 ```sh term
@@ -27,7 +27,7 @@ echo "nameserver 8.8.8.8" >> /etc/resolv.conf && echo "nameserver 8.8.4.4" >> /e
 ```
 buka dan edit untuk hostname di /etc/hostname
 ```sh file
-echo "cnsatrain" > /etc/hostname
+echo "alpine" > /etc/hostname
 hostname -F /etc/hostname
 ```
 buka dan edit untuk domain di /etc/hosts
