@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Permission Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="calculator">
+        <h1>Linux Permission Calculator</h1>
+        <div class="input-group">
+            <label for="owner">Owner:</label>
+            <input type="number" id="owner" min="0" max="7" oninput="calculatePermission()">
+        </div>
+        <div class="input-group">
+            <label for="group">Group:</label>
+            <input type="number" id="group" min="0" max="7" oninput="calculatePermission()">
+        </div>
+        <div class="input-group">
+            <label for="others">Others:</label>
+            <input type="number" id="others" min="0" max="7" oninput="calculatePermission()">
+        </div>
+        <div id="result"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
