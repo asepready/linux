@@ -1,2 +1,2 @@
-# linux
+# Linux
 Learn Linux Administrator

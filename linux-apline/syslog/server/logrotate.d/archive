@@ -1,10 +1,10 @@
-/var/log/network-logs/*.log
+/var/log/archive/*.log
 {
         size 100M
         copytruncate
         create
         compress
-        olddir /var/log/network-logs/logs-archive
+        olddir /var/log/archive
         rotate 4
         postrotate
                 /usr/lib/rsyslog/rsyslog-rotate

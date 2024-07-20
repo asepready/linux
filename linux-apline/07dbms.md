@@ -42,13 +42,13 @@ mysql -u root -p
 ```
 ## Show Users
 ```sh
-SELECT User, Host FROM mysql.user;
+SELECT user,host FROM mysql.user;
 SELECT user,host,ssl_type from mysql.user;
 ```
 ## Create User
 ```sh
 CREATE USER 'someuser'@'localhost' IDENTIFIED BY 'somepassword'; 
-CREATE USER 'someuser'@'localhost' IDENTIFIED BY 'somepassword' REQUIRE SSL; #SSL
+CREATE USER 'someuser'@'localhost' IDENTIFIED BY 'somepassword' REQUIRE SSL;
 ```
 ## Grant All Priveleges On All Databases
 ```sh
