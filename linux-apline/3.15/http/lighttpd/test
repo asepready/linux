@@ -1,0 +1,1 @@
+lighttpd -tt -f /etc/lighttpd/lighttpd.conf

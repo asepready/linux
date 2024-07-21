@@ -1,17 +1,17 @@
 protecting URL webpage
 ```sh
-apk add apache2-utils
-htpasswd -c /etc/lighttpd/.htpasswd <Username> #Replace <Username>, you will be prompted to enter the password.
+apk add --no-cache lighttpd-mod_auth apache2-utils
+htpasswd -c /etc/lighttpd/.htpasswd <Username>
 
 # Make sure that "mod_auth" is loaded in "server.modules".
 cat > /etc/lighttpd/mod_auth.conf << EOF
 server.modules += ("mod_auth")
 auth.backend = "htpasswd"
-auth.backend.htpasswd.userfile= "/etc/lighttpd/.htpasswd"
-auth.require = ( "/RestrictedURL" => 
+auth.backend.htpasswd.userfile= "/etc/lighttpd/htpasswd"
+auth.require = ( "/nagios" => 
     (
     "method"  => "basic",
-    "realm"   => "Restricted!",
+    "realm"   => "nagios",
     "require" => "valid-user"
     ),
 )
