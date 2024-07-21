@@ -4,9 +4,10 @@ This production environment will handle only the necessary packages... so no doc
 - added the service to the default runlevel, not to boot, because need networking activated
 - start the web server service
 ```sh
-apk add --no-cache lighttpd
+apk add lighttpd
+mkdir -p /var/www/html /var/lib/lighttpd; chown -R lighttpd:lighttpd /var/www/html /var/lib/lighttpd
 rc-update add lighttpd default;rc-service lighttpd restart
-echo "it works" > /var/www/localhost/htdocs/index.html
+echo "it works" > /var/www/html/index.html
 ```
 # Lighttpd Configuration
 ## Status page
@@ -17,11 +18,9 @@ Taking care of the status web server: those special pages are just minimal info 
 ```sh
 sed -i -r 's#\#.*mod_status.*,.*#    "mod_status",#g' /etc/lighttpd/lighttpd.conf
 
-mkdir -p /var/www/localhost/htdocs/stats
+sed -i -r 's#.*status.status-url.*=.*#status.status-url  = "/server-status"#g' /etc/lighttpd/lighttpd.conf
 
-sed -i -r 's#.*status.status-url.*=.*#status.status-url  = "/stats/server-status"#g' /etc/lighttpd/lighttpd.conf
-
-sed -i -r 's#.*status.config-url.*=.*#status.config-url  = "/stats/server-config"#g' /etc/lighttpd/lighttpd.conf
+sed -i -r 's#.*status.config-url.*=.*#status.config-url  = "/server-config"#g' /etc/lighttpd/lighttpd.conf
 
 rc-service lighttpd restart
 ```
@@ -33,7 +32,22 @@ By default packages assign a directory under localhost main domain, other linux 
 3. enable the config cgi file
 4. restart the service to see changes at the browser
 ```sh
-mkdir -p /var/www/localhost/cgi-bin
+mkdir -p /var/www/cgi-bin
+
+cat > /etc/lighttpd/mod_cgi.conf << EOF
+server.modules += ("mod_cgi")
+alias.url = (
+     "/cgi-bin/"	    =>	    var.basedir + "/cgi-bin/"
+)
+
+$HTTP["url"] =~ "^/cgi-bin/" {
+    dir-listing.activate = "disable"
+    cgi.assign = (
+		".pl"	=>	"/usr/bin/perl",
+		".cgi"	=>	"/usr/bin/perl"
+	)
+}
+EOF
 
 sed -i -r 's#\#.*mod_alias.*,.*#    "mod_alias",#g' /etc/lighttpd/lighttpd.conf
 
@@ -46,21 +60,21 @@ rc-service lighttpd restart
 ## Make special errors (404 or 500) pages for clients and visitors
 These pages will be shown to visitors when a page or path is not present on the server, or when an internal error happens. These replace the default, minimal error pages and can be a nice message or "away from here" message:`server.errorfile-prefix`
 ```sh
-mkdir -p /var/www/localhost/errors
+mkdir -p /var/www/errors
 
-cat > /var/www/localhost/errors/status-404.html << EOF
+cat > /var/www/errors/status-404.html << EOF
 <h1>The page that you requested are not yet here anymore, sorry was moved or updated, search or visit another one</h1>
 EOF
 
-cat > /var/www/localhost/errors/status-500.html << EOF
+cat > /var/www/errors/status-500.html << EOF
 <h1>Please wait a moment, there's something happens and we are give support maintenance right now to resolve</h1>
 EOF
 
-cp /var/www/localhost/errors/status-404.html /var/www/localhost/errors/status-403.html
+cp /var/www/errors/status-404.html /var/www/errors/status-403.html
 
-cp /var/www/localhost/errors/status-500.html /var/www/localhost/errors/status-501.html
+cp /var/www/errors/status-500.html /var/www/errors/status-501.html
 
-cp /var/www/localhost/errors/status-500.html /var/www/localhost/errors/status-503.html
+cp /var/www/errors/status-500.html /var/www/errors/status-503.html
 
 sed -i -r 's#.*server.errorfile-prefix.*#server.errorfile-prefix    = var.basedir + "/errors/status-"#g' /etc/lighttpd/lighttpd.conf
 
@@ -78,7 +92,7 @@ We need to created a self-signed certificate if we do not already have one:
 6. activate the mod_redirect in case of global http to https redirections
 7. restart the service to see changes
 ```sh
-apk add --no-cache openssl
+apk add openssl
 
 mkdir -p /etc/ssl/certs/
 openssl req -x509 -days 1460 -nodes -newkey rsa:4096 \
@@ -89,11 +103,9 @@ chmod 400 /etc/ssl/certs/localhost.pem
 
 cat > /etc/lighttpd/mod_ssl.conf << EOF
 server.modules += ("mod_openssl")
-var.confdir = "/etc/lighttpd"
 \$SERVER["socket"] == "0.0.0.0:443" {
     ssl.engine  = "enable"
-    ssl.pemfile =  var.confdir + "/etc/ssl/certs/localhost.pem"
-    ssl.ca-file = var.confdir + "/DigiCertCA.crt"
+    ssl.pemfile = "/etc/ssl/certs/localhost.pem"
     ssl.cipher-list = "ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM"
     ssl.honor-cipher-order = "enable"
 }
@@ -119,4 +131,30 @@ This must be used with caution. Everything is a file to a UNIX operating system.
 checkset="";checkset=$(grep 'max-fds' /etc/lighttpd/lighttpd.conf);[[ "$checkset" != "" ]] && echo listo || sed -i -r 's#server settings.*#server settings\nserver.max-fds = 2048\n#g' /etc/lighttpd/lighttpd.conf
 
 rc-service lighttpd restart
+```
+
+## Lighttpd RRDTOOL
+```sh
+cat > /etc/lighttpd/mod_rrdtool.conf << EOF
+server.modules += ( "mod_rrdtool" )
+### RRDTOOL Config
+# path to the rrdtool binary
+rrdtool.binary = "/usr/bin/rrdtool"
+# rrd database file
+rrdtool.db-name = "/var/www/rrd"
+EOF
+
+cd /var/www/cgi-bin/;wget http://redmine.lighttpd.net/attachments/download/793 ;chmod +x lightygraph.cgi
+```
+
+## Lighttpd accesslog modul
+```sh
+cat > /etc/lighttpd/mod_extforward.conf << EOF
+server.modules += ( "mod_extforward" )
+extforward.forwarder = (
+    "192.168.0.0/16" => "trust",
+    "10.0.0.0/8" => "trust",
+    "172.16.0.0/12" => "trust"
+)
+EOF
 ```

@@ -3,7 +3,7 @@
 $dbname = 'cacti';
 $dbhost = '192.168.20.4';
 $dbuser = 'cactiuser';
-$dbpass = 'iD0&t6raY768mQ6';
+$dbpass = '';
 
 $link = mysqli_connect($dbhost, $dbuser, $dbpass) or die("Tidak dapat terhubung ke '$dbhost'");
 mysqli_select_db($link, $dbname) or die("Tidak dapat membuka database '$dbname'");

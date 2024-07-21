@@ -1,5 +1,5 @@
 ```sh
-apk add --no-cache bash attr dialog binutils findutils readline lsof less utmps curl tzdata
+apk add bash attr dialog binutils findutils readline lsof less utmps curl tzdata
 ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 
 export PAGER=less
@@ -9,7 +9,7 @@ export MIBS=ALL
 ## Webserver
 sed -i -r 's#\#.*server.port.*=.*#server.port          = 80#g' /etc/lighttpd/lighttpd.conf
 
-sed -i -r 's#.*server.stat-cache-engine.*=.*# server.stat-cache-engine = "inotify"#g' /etc/lighttpd/lighttpd.conf
+sed -i -r 's#.*server.stat-cache-engine.*=.*# server.stat-cache-engine = "fam"#g' /etc/lighttpd/lighttpd.conf
 
 sed -i -r 's#\#.*server.event-handler = "linux-sysepoll".*#server.event-handler = "linux-sysepoll"#g' /etc/lighttpd/lighttpd.conf
 
@@ -22,15 +22,15 @@ echo listo || sed -i -r 's#server settings.*#server settings"\nserver.network-ba
 rc-service lighttpd restart
 
 ## PHP82-FPM Cacti
-apk add --no-cache cacti cacti-lang cacti-setup
-apk add --no-cache bash busybox coreutils net-snmp-tools perl rrdtool ttf-dejavu php82-snmp
+apk add cacti cacti-lang cacti-setup cacti-php8
+apk add bash busybox coreutils net-snmp-tools perl rrdtool ttf-dejavu php82-snmp
 
-apk add --no-cache php82-fpm
+apk add php82-fpm
 
 # Require Cacti
-apk add --no-cache php82-pear php82-ctype php82-gettext php82-gd php82-gmp php82-json php82-ldap php82-mbstring php82-openssl php82-pdo php82-pdo_mysql php82-mysqli php82-session php82-simplexml php82-sockets php82-xml php82-zlib php82-posix php82-intl php82-pcntl php82-snmp
+apk add php82-pear php82-ctype php82-gettext php82-gd php82-gmp php82-json php82-ldap php82-mbstring php82-openssl php82-pdo php82-pdo_mysql php82-mysqli php82-session php82-simplexml php82-sockets php82-xml php82-zlib php82-posix php82-intl php82-pcntl php82-snmp
 
-apk add --no-cache php82-bcmath php82-bz2 php82-curl php82-dom php82-enchant php82-exif php82-iconv php82-imap php82-opcache php82-phar php82-pspell php82-sysvmsg php82-sysvsem php82-sysvshm php82-tidy php82-tokenizer php82-xmlreader php82-xmlwriter php82-xsl php82-zip php82-opcache php82-calendar php82-fileinfo php82-ftp php82-mysqlnd php82-shmop php82-pdo_sqlite php82-sqlite3 php82-odbc php82-pdo_odbc php82-dba
+apk add php82-bcmath php82-bz2 php82-curl php82-dom php82-enchant php82-exif php82-iconv php82-imap php82-opcache php82-phar php82-pspell php82-sysvmsg php82-sysvsem php82-sysvshm php82-tidy php82-tokenizer php82-xmlreader php82-xmlwriter php82-xsl php82-zip php82-opcache php82-calendar php82-fileinfo php82-ftp php82-mysqlnd php82-shmop php82-pdo_sqlite php82-sqlite3 php82-odbc php82-pdo_odbc php82-dba
 
 #sed -i -r 's|.*extension_dir =.*|extension_dir = /usr/lib/php82/modules |g' /etc/php*/php.ini
 sed -i -r 's|.*cgi.fix_pathinfo=.*|cgi.fix_pathinfo=1|g' /etc/php*/php.ini
@@ -127,7 +127,7 @@ rc-service php-fpm82 restart;rc-service lighttpd restart
 echo "<?php echo phpinfo(); ?>" > /var/www/localhost/htdocs/info.php
 
 ## SNMP
-apk add --no-cache net-snmp net-snmp-tools net-snmp-libs rrdtool
+apk add net-snmp net-snmp-tools net-snmp-libs rrdtool
 
 cat > /etc/snmp/snmpd.conf << EOF
 view systemonly included .1.3.6.1.2.1.1

@@ -1,5 +1,4 @@
 #!/bin/sh
-
 DIR=loganalyzer
 DLDIR=loganalyzer
 FILE=loganalyzer-4.1.13.tar.gz
@@ -11,12 +10,12 @@ if [ $(id -u) -ne 0 ]; then
     exit 1
 fi
     
-if ! which wget &>/dev/null; then
-    apk add wget
+if ! which lighttpd &>/dev/null; then
+    apk add lighttpd
 fi
 
 cd /tmp
-echo "check if /tmp/nagioslogserver exists"
+echo "check if /tmp/loganalyzer  exists"
 if [ ! -d /tmp/$DIR ]; then
     rm -f /tmp/$DIR
     wget https://download.adiscon.com/$DLDIR/$FILE -O /tmp/$FILE
