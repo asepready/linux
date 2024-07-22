@@ -1,8 +1,0 @@
-sudo apt install rsyslog -y
-
-mkdir -p /var/log/network-logs/logs-archive;chown -R syslog:adm /var/log/network-logs
-nano /etc/rsyslog.d/network-logs.conf
-
-systemctl start rsyslog;systemctl enable rsyslog 
-
-rsyslogd -f /etc/rsyslog.conf -N1
