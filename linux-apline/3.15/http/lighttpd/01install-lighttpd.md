@@ -37,15 +37,15 @@ mkdir -p /var/www/cgi-bin
 cat > /etc/lighttpd/mod_cgi.conf << EOF
 server.modules += ("mod_cgi")
 alias.url = (
-     "/cgi-bin/"	    =>	    var.basedir + "/cgi-bin/"
+    "/cgi-bin" =>	var.basedir + "/cgi-bin/"
 )
 
 $HTTP["url"] =~ "^/cgi-bin/" {
     dir-listing.activate = "disable"
     cgi.assign = (
-		".pl"	=>	"/usr/bin/perl",
-		".cgi"	=>	"/usr/bin/perl"
-	)
+        ".pl"	=>	"/usr/bin/perl",
+        ".cgi"	=>	"/usr/bin/perl"
+    )
 }
 EOF
 
@@ -54,6 +54,8 @@ sed -i -r 's#\#.*mod_alias.*,.*#    "mod_alias",#g' /etc/lighttpd/lighttpd.conf
 sed -i -r 's#.*include "mod_cgi.conf".*#   include "mod_cgi.conf"#g' /etc/lighttpd/lighttpd.conf
 
 sed -i -r 's#.*dir-listing.activate.*=.*#dir-listing.activate  = "enable"#g' /etc/lighttpd/lighttpd.conf
+
+echo "cgi it works" > /var/www/cgi-bin/index.html
 
 rc-service lighttpd restart
 ```
@@ -131,20 +133,6 @@ This must be used with caution. Everything is a file to a UNIX operating system.
 checkset="";checkset=$(grep 'max-fds' /etc/lighttpd/lighttpd.conf);[[ "$checkset" != "" ]] && echo listo || sed -i -r 's#server settings.*#server settings\nserver.max-fds = 2048\n#g' /etc/lighttpd/lighttpd.conf
 
 rc-service lighttpd restart
-```
-
-## Lighttpd RRDTOOL
-```sh
-cat > /etc/lighttpd/mod_rrdtool.conf << EOF
-server.modules += ( "mod_rrdtool" )
-### RRDTOOL Config
-# path to the rrdtool binary
-rrdtool.binary = "/usr/bin/rrdtool"
-# rrd database file
-rrdtool.db-name = "/var/www/rrd"
-EOF
-
-cd /var/www/cgi-bin/;wget http://redmine.lighttpd.net/attachments/download/793 ;chmod +x lightygraph.cgi
 ```
 
 ## Lighttpd accesslog modul
