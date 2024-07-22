@@ -1,1 +1,0 @@
-curl -so wazuh-passwords-tool.sh https://packages.wazuh.com/4.8/wazuh-passwords-tool.sh

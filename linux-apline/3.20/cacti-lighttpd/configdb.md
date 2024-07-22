@@ -9,6 +9,10 @@ GRANT ALL ON cacti.* TO 'cactiuser'@'127.0.0.1' IDENTIFIED BY 'cactiuser' REQUIR
 GRANT GRANT OPTION ON cacti.* TO 'cactiuser'@'127.0.0.1';FLUSH PRIVILEGES;
 GRANT SELECT ON mysql.time_zone_name TO 'cactiuser'@'127.0.0.1';
 
+GRANT ALL ON cacti.* TO 'cactiuser'@'%' IDENTIFIED BY 'cactiuser' REQUIRE SSL;FLUSH PRIVILEGES;
+GRANT GRANT OPTION ON cacti.* TO 'cactiuser'@'%';FLUSH PRIVILEGES;
+GRANT SELECT ON mysql.time_zone_name TO 'cactiuser'@'%';
+
 ALTER USER 'cactiuser'@'localhost' REQUIRE SSL;FLUSH PRIVILEGES;
 
 # Periksa Host yang Diizinkan:
