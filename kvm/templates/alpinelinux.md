@@ -12,7 +12,7 @@ virt-install --name alpinelinux3 \
   --virt-type kvm --memory 2048 --vcpus 4 \
   --boot hd,menu=on \
   --disk path=/home/$USER/kvm/alpinelinux3.qcow2,device=disk \
-  --cdrom=/home/$USER/kvm/alpine-virt-3.15.9-x86_64.iso \
+  --cdrom=/home/$USER/kvm/alpine-virt-3.16.9-x86_64.iso \
   --graphics spice \
   --os-type Linux --os-variant alpinelinux3.17
 ```
@@ -20,6 +20,9 @@ virt-install --name alpinelinux3 \
 # 3. Kompress File
 ```sh
 #Compress the Image
-t
+qemu-img convert -c \
+/home/$USER/kvm/alpinelinux3.qcow2 -O qcow2 \
+/home/$USER/kvm/alpinelinux.qcow2
+
 
 https://wiki.alpinelinux.org/wiki/Enable_Serial_Console_on_Boot
