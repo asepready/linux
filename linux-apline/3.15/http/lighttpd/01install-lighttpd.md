@@ -5,7 +5,7 @@ This production environment will handle only the necessary packages... so no doc
 - start the web server service
 ```sh
 apk add lighttpd
-mkdir -p /var/www/html /var/lib/lighttpd; chown -R lighttpd:lighttpd /var/www/html /var/lib/lighttpd
+mkdir -p /var/www/html; chown -R lighttpd:lighttpd /var/www/html
 rc-update add lighttpd default;rc-service lighttpd restart
 echo "it works" > /var/www/html/index.html
 ```
@@ -33,21 +33,6 @@ By default packages assign a directory under localhost main domain, other linux 
 4. restart the service to see changes at the browser
 ```sh
 mkdir -p /var/www/cgi-bin
-
-cat > /etc/lighttpd/mod_cgi.conf << EOF
-server.modules += ("mod_cgi")
-alias.url = (
-    "/cgi-bin" =>	var.basedir + "/cgi-bin/"
-)
-
-$HTTP["url"] =~ "^/cgi-bin/" {
-    dir-listing.activate = "disable"
-    cgi.assign = (
-        ".pl"	=>	"/usr/bin/perl",
-        ".cgi"	=>	"/usr/bin/perl"
-    )
-}
-EOF
 
 sed -i -r 's#\#.*mod_alias.*,.*#    "mod_alias",#g' /etc/lighttpd/lighttpd.conf
 

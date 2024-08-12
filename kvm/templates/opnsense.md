@@ -1,7 +1,7 @@
 # 1. Persiapan buat Image Kosong:
 ```sh
 qemu-img create -f qcow2 \
-/home/$USER/kvm/opn.qcow2 \
+/home/$USER/kvm/opnsense.qcow2 \
 10G
 ```
 
