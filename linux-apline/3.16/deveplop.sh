@@ -1,0 +1,1 @@
+apk add build-base gcc autoconf automake make libtool

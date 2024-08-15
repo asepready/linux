@@ -1,0 +1,28 @@
+nodes:
+  # Wazuh indexer nodes
+  indexer:
+    - name: wazuh-indexer
+      ip: "192.168.20.101"
+    #- name: node-2
+    #  ip: "<indexer-node-ip>"
+    #- name: node-3
+    #  ip: "<indexer-node-ip>"
+
+  # Wazuh server nodes
+  # If there is more than one Wazuh server
+  # node, each one must have a node_type
+  server:
+    - name: pkg-freebsd
+      ip: "192.168.20.100"
+    #  node_type: master
+    #- name: wazuh-2
+    #  ip: "<wazuh-manager-ip>"
+    #  node_type: worker
+    #- name: wazuh-3
+    #  ip: "<wazuh-manager-ip>"
+    #  node_type: worker
+
+  # Wazuh dashboard nodes
+  dashboard:
+    - name: wazuh-dashboard
+      ip: "192.168.20.103"
