@@ -37,6 +37,8 @@ qemu-img convert -O qcow2 input.vmdk output.qcow2
 
 ```sh
 qemu-img convert -f raw -O qcow2 BSDRP.img bsdrp.qcow2
+qemu-img convert -c debian7.qcow2 -O qcow2 debian7-vm.qcow2
+
 qemu-system-x86_64 -m 512 \
 -drive file=bsdrp.qcow2,index=0,media=disk,format=qcow2 \
 -netdev user,id=net0 \

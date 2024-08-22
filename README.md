@@ -1,4 +1,5 @@
 # Linux
 Learn Linux Administrator
 
-https://redmine.lighttpd.net/projects/lighttpd/wiki/TutorialConfiguration
+- [40 Linux Server Hardening Security Tips](https://www.cyberciti.biz/tips/linux-security.html)
+- https://redmine.lighttpd.net/projects/lighttpd/wiki/TutorialConfiguration
