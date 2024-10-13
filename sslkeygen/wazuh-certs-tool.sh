@@ -1,14 +1,6 @@
 #!/bin/bash
-
-# Wazuh installer
-# Copyright (C) 2015, Wazuh Inc.
-#
-# This program is a free software; you can redistribute it
-# and/or modify it under the terms of the GNU General Public
-# License (version 2) as published by the FSF - Free Software
-# Foundation.
-adminpem="/etc/wazuh-indexer/certs/admin.pem"
-adminkey="/etc/wazuh-indexer/certs/admin-key.pem"
+adminpem="/etc/ssl/certs/admin.pem"
+adminkey="/etc/ssl/certs/admin-key.pem"
 base_path="$(dirname "$(readlink -f "$0")")"
 readonly base_path
 readonly config_file="${base_path}/config.yml"
@@ -812,7 +804,7 @@ function common_checkInstalled() {
         indexer_installed=$(apt list --installed 2>/dev/null | grep wazuh-indexer)
     fi
 
-    if [ -d "/var/lib/wazuh-indexer/" ] || [ -d "/usr/share/wazuh-indexer" ] || [ -d "/etc/wazuh-indexer" ] || [ -f "${base_path}/search-guard-tlstool*" ]; then
+    if [ -d "/var/lib/wazuh-indexer/" ] || [ -d "/usr/share/wazuh-indexer" ] || [ -d "/etc/ssl" ] || [ -f "${base_path}/search-guard-tlstool*" ]; then
         common_logger -d "There are Wazuh indexer remaining files."
         indexer_remaining_files=1
     fi

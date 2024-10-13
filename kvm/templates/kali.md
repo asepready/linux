@@ -2,7 +2,7 @@
 ```sh
 qemu-img create -f qcow2 \
 /home/$USER/kvm/kalilinux.qcow2 \
-50G
+32G
 ```
 
 # 2. Menjalankan image:
@@ -12,7 +12,7 @@ virt-install --name kali \
   --virt-type kvm --memory 2048 --vcpus 4 \
   --boot hd,menu=on \
   --disk path=/home/$USER/kvm/kalilinux.qcow2,device=disk \
-  --cdrom=/home/$USER/kvm/kali-linux-2024.2-installer-amd64.iso \
+  --cdrom=/home/$USER/kvm/kali-linux-2024.3-installer-netinst-i386.iso \
   --graphics spice \
   --os-type Linux --os-variant linux2022
 ```
