@@ -12,7 +12,7 @@ virt-install --name kali \
   --virt-type kvm --memory 2048 --vcpus 4 \
   --boot hd,menu=on \
   --disk path=/home/$USER/kvm/kalilinux.qcow2,device=disk \
-  --cdrom=/home/$USER/kvm/kali-linux-2024.3-installer-netinst-i386.iso \
+  --cdrom=/home/$USER/kvm/kali-linux-2024.3-installer-everything-amd64.iso \
   --graphics spice \
   --os-type Linux --os-variant linux2022
 ```
