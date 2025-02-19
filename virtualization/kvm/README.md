@@ -1,57 +1,34 @@
 jika belum menginstall kvm harap di install terlebih dahulu. [Klik baca](https://www.how2shout.com/linux/how-to-install-and-configure-kvm-on-debian-11-bullseye-linux/) referensi install KVM
 
 ```sh
-apt install qemu-kvm qemu-system qemu-utils libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon ovmf
-apt install virt-manager guestfs-tools
+# Ubuntu
+apt install qemu-kvm qemu-system qemu-utils libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon ovmf virt-manager guestfs-tools
+# Fedora
+sudo dnf groupinstall "Virtualization Host"
+sudo dnf install qemu-kvm libvirt virt-install virt-manager
 ```
 
-
-## Ubuntu 22.04 GPU passthrough (QEMU)
-
-https://askubuntu.com/questions/1406888/ubuntu-22-04-gpu-passthrough-qemu
-
-Create a new file called vfio.conf
-Add the following lines with your device IDs from the:
-
+Pengizinan
 ```sh
-sudo nano /etc/modprobe.d/vfio.conf
+sudo usermod -aG libvirt,kvm $USER
+sudo systemctl restart libvirtd
 
-#/etc/modprobe.d/vfio.conf
-blacklist nouveau
-blacklist snd_hda_intel
-options vfio-pci ids=10aa:10bb,01cc:01ee
-```
+#Polkit untuk Akses Tanpa Root
+#/etc/polkit-1/rules.d/80-libvirt.rules
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.libvirt.unix.manage" &&
+        subject.isInGroup("libvirt")) {
+            return polkit.Result.YES;
+    }
+});
 
-Edit the guest machine
-```sh
-$ virsh list --all
-$ sudo virsh edit YourGuestMachineName
-```
+sudo systemctl restart polkit
 
-Add the following lines:
-```sh
-<vendor_id state='on' value='1234567890ab'/>
-<kvm>
- <hidden state='on'/>
-</kvm>
-<ioapic driver='kvm'/>
-```
+# Opsi Nonaktifkan Autentikasi Password untuk Libvirt
+#/etc/libvirt/libvirtd.conf
+unix_sock_group = "libvirt"
+unix_sock_rw_perms = "0770"
+auth_unix_rw = "none"
 
-The end result should look something like:
-```sh
-  <features>
-    <acpi/>
-    <apic/>
-    <hyperv>
-      <relaxed state='on'/>
-      <vapic state='on'/>
-      <spinlocks state='on' retries='8191'/>
-      <vendor_id state='on' value='1234567890ab'/>
-    </hyperv>
-    <kvm>
-      <hidden state='on'/>
-    </kvm>
-    <vmport state='off'/>
-    <ioapic driver='kvm'/>
-  </features>
+sudo systemctl restart libvirtd
 ```

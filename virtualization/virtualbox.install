@@ -2,3 +2,5 @@ sudo apt update
 sudo apt install virtualbox virtualbox-ext-pack
 
 sudo usermod -aG vboxusers $USER
+
+sudo usermod -aG ubridge,libvirt,kvm,wireshark,vboxusers $(whoami)

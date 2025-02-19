@@ -22,4 +22,6 @@ virt-install --name ubuntu18 \
 #Compress the Image
 qemu-img convert -c \
 /home/$USER/kvm/ubuntu18.qcow2 -O qcow2 \
-/home/$USER/kvm/ubu18.qcow2
+/home/$USER/kvm/docker01.qcow2
+
+

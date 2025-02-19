@@ -2,11 +2,15 @@
 Buka dan edit untuk /etc/apt/sources.list
 ```sh file
 # /etc/apt/sources.list #laring
-deb http://debian.faztrain.id/ wheezy main
+deb [trusted=yes] http://archive.debian.org/debian wheezy main non-free contrib
+deb [trusted=yes] http://archive.debian.org/debian wheezy-backports main non-free contrib
+deb [trusted=yes] http://archive.debian.org/debian-security wheezy/updates main non-free contrib
 ```
 
 Lakukan pengecekan pembaruan reposetori'
 ```sh
+apt-get --allow-unauthenticated update
+apt-key list | grep expired
 apt-get update
 ```
 ## 2 Pengujian Repository
