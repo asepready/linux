@@ -1,4 +1,5 @@
-[Remove OldKernel](https://fostips.com/remove-old-kernels-fedora-rhel/)
+- [Remove OldKernel on Fedora/RHEL](https://fostips.com/remove-old-kernels-fedora-rhel/)
+- [Remove OldKernel on Ubuntu/Debian](https://ostechnix.com/remove-old-unused-linux-kernels/)
 
 Update and Costum grub2 conf
 ```sh
