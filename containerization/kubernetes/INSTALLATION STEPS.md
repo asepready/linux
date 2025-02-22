@@ -69,6 +69,22 @@ Runc is a standardized runtime for spawning and running containers on Linux acco
   containerd config default | sudo tee /etc/containerd/config.toml
   sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
   sudo curl -L https://raw.githubusercontent.com/containerd/containerd/main/containerd.service -o /etc/systemd/system/containerd.service
+
+# Enable IPv4 packet forwarding
+sudo modprobe overlay
+sudo modprobe br_netfilter
+cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
+overlay
+br_netfilter
+EOF
+
+cat <<EOF | sudo tee /etc/sysctl.d/kubernetes.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+sudo sysctl --system
 ```
 
 ## Step 5: Start containerd service
@@ -89,6 +105,11 @@ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt-get update
 sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+
+# Disable Swap
+sudo swapoff -a
+sudo sed -i '/swap/d' /etc/fstab
 ```
 
 ## Step d: Run kubeadm init and setup the control plane
@@ -102,14 +123,67 @@ sudo apt-get install -y kubelet kubeadm kubectl
   kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
   kubectl get pods --all-namespaces
   kubectl get nodes
+
+#control plane
+sudo ufw allow 6443/tcp
+sudo ufw allow 2379/tcp
+sudo ufw allow 2380/tcp
+sudo ufw allow 10250/tcp
+sudo ufw allow 10251/tcp
+sudo ufw allow 10252/tcp
+sudo ufw allow 10255/tcp
+sudo ufw reload
 ```
 
 
 ## On k8s-wn-1 node - perform below steps
  ``` console
+#node worker 
+sudo ufw allow 10251/tcp
+sudo ufw allow 10255/tcp
+sudo ufw reload
+
 Step f : containerd-installation  [ Follow above containerd installation steps ]
 Step g : kubelet,kubectl,kubeadm installation  [ Follow above steps - BUT PLZ DO NOT RUN KUBEADM INIT ON WORKERNODES . ITS ONLY ON MASTER NODE ]
 Step h : Reboot the VM
 Step i : Run kubeadm join command  [ Get the join command from master node ]
 ```
+
 #### INSTALLATION COMPLETE
+```sh
+kubectl get nodes
+# output
+NAME             STATUS   ROLES           AGE     VERSION
+control.master   Ready    control-plane   5m21s   v1.28.15
+node01.worker    Ready    <none>          4m45s   v1.28.15
+node02.worker    Ready    <none>          2m41s   v1.28.15
+
+# set role
+kubectl label node node01.worker node-role.kubernetes.io/worker=worker
+kubectl label node node02.worker node-role.kubernetes.io/worker=worker
+
+kubectl get nodes
+# output
+NAME             STATUS   ROLES           AGE   VERSION
+control.master   Ready    control-plane   17m   v1.28.15
+node01.worker    Ready    worker          16m   v1.28.15
+node02.worker    Ready    worker          14m   v1.28.15
+```
+# 1 Master Node Components
+## A master node runs the following control plane components:
+- API Server
+- Scheduler
+- Controller Managers
+- Data Store.
+
+## In addition, the master node runs:
+- Container Runtime
+- Node Agent
+- Proxy.
+
+# 2 Worker Node Components
+## A worker node has the following components:
+- Container Runtime
+- Node Agent - kubelet
+- Proxy - kube-proxy
+- Addons for DNS, Dashboard user interface, cluster-level monitoring and logging.
