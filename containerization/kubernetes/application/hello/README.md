@@ -1,37 +1,30 @@
 Example: Deploying PHP Guestbook application with Redis
 ```sh
 # Creating the Deployment
-kubectl apply -f https://k8s.io/examples/application/guestbook/redis-leader-deployment.yaml
-kubectl apply -f https://k8s.io/examples/application/guestbook/redis-follower-deployment.yaml
-kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
+kubectl apply -f https://k8s.io/examples/service/load-balancer-example.yaml
 
 kubectl get pods 
-kubectl logs -f deployment/redis-leader
-kubectl get pods -l app=guestbook -l tier=frontend
+kubectl get pods --output=wide
+
+# Info
+kubectl get deployments hello-world
+kubectl describe deployments hello-world
+kubectl get replicasets
+kubectl describe replicasets
+
+kubectl logs -f deployment/hello-world
 
 # Creating the Service
-kubectl apply -f https://k8s.io/examples/application/guestbook/redis-leader-service.yaml
-kubectl apply -f https://k8s.io/examples/application/guestbook/redis-follower-service.yaml
-kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
+kubectl expose deployment hello-world --type=LoadBalancer --name=hello-service
 kubectl get service
-
-# Viewing the Frontend Service via LoadBalancer
-kubectl port-forward svc/frontend 8080:80
-kubectl get service frontend
-
-# Scale the Web Frontend
-kubectl scale deployment frontend --replicas=5
-kubectl get pods
+kubectl get services hello-service
+kubectl describe services hello-service
 
 # Cleaning up
 ## delete all Pods, Deployments, and Services
-kubectl delete deployment -l app=redis
-kubectl delete service -l app=redis
-kubectl delete deployment frontend
-kubectl delete service frontend
+kubectl delete deployment hello-world
+kubectl delete service hello-service
 
 ## The response should look similar to this:
-deployment.apps "redis-follower" deleted
-deployment.apps "redis-leader" deleted
-deployment.apps "frontend" deleted
-service "frontend" deleted
+deployment.apps "hello-world" deleted
+service "hello-service" deleted
