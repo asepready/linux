@@ -1,17 +1,3 @@
-# Master Node Components
-## A master node runs the following control plane components:
-- API Server
-- Scheduler
-- Controller Managers
-- Data Store.
-
-## In addition, the master node runs:
-- Container Runtime
-- Node Agent
-- Proxy.
-
-
-# IP
 ```sh
 #/etc/netplan/01-netcfg.yaml
 network:
@@ -36,7 +22,7 @@ ip addr show dev enp1s0
 
 #/etc/hosts
 127.0.0.1 localhost
-172.16.1.10 master
-172.16.1.11 worker1
-172.16.1.12 worker2
+192.168.122.128 control.master control
+192.168.122.129 node01.worker node01
+192.168.122.130 node02.worker node02
 ```
