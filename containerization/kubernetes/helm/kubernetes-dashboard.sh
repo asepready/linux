@@ -5,13 +5,16 @@ helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
 
 #user-admin.yaml
+echo '
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: admin-user
   namespace: kubernetes-dashboard
+' | tee $HOME/user-admin.yaml
 
 #cluster-admin.yaml
+echo '
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -24,8 +27,10 @@ subjects:
 - kind: ServiceAccount
   name: admin-user
   namespace: kubernetes-dashboard
+' | tee $HOME/cluster-admin.yaml
 
 #secret-admin.yaml
+echo '
 apiVersion: v1
 kind: Secret
 metadata:
@@ -34,6 +39,7 @@ metadata:
   annotations:
     kubernetes.io/service-account.name: "admin-user"   
 type: kubernetes.io/service-account-token 
+' | tee $HOME/secret-admin.yaml
 
 # create
 kubectl apply -f user-admin.yaml
