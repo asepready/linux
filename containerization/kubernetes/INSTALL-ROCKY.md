@@ -1,7 +1,7 @@
 # Kubernetes V1.26 Installation with containerd container engine - Multi Node Cluster setup
 
 ```console
-Step a : Create 3 VMs with Ubuntu 20.04 LTS OS. VM1: k8s-controlplane, VM2: k8s-workernode-1
+Step a : Create 3 VMs with Rocky Linux 9 OS. VM1: k8s-controlplane, VM2: k8s-workernode-1
 
 $$ On k8s-controlplane node & workernodes  - perform below steps
 Step b : containerd-installation
@@ -20,7 +20,7 @@ Step i : Run kubeadm join command
 ```
 # On k8s-controlplane & K8s-workernodes : Until step d
 ## Step b : containerd-installation
-## How to install Containerd on Ubuntu OS
+## How to install Containerd on Rocky OS
 ```console
 Step 1 : Download & unpack containerd package
 Step 2 : Install runc
@@ -89,6 +89,7 @@ sudo sysctl --system
 #/etc/selinux/config
 SELINUX=permissive
 #or
+sudo setenforce 0
 sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
 # traffic control utility package:
@@ -106,18 +107,25 @@ sudo systemctl status containerd
 
 ## Step c : kubelet,kubectl,kubeadm installation
 ```bash
-sudo apt-get update
-sudo apt-get install -y apt-transport-https ca-certificates curl gpg
-sudo mkdir -p /etc/apt/keyrings/
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
-sudo apt-get install -y kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
+echo '
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+' | sudo tee /etc/yum.repos.d/kubernetes.repo
+
+sudo dnf repolist
+sudo dnf makecache
+sudo dnf install kubelet kubeadm kubectl --disableexcludes=kubernetes
+sudo systemctl enable --now kubelet
 
 # Disable Swap
 sudo swapoff -a
-sudo sed -i '/swap/d' /etc/fstab
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo reboot now
 ```
 
 ## Step d: Run kubeadm init and setup the control plane
@@ -133,20 +141,18 @@ sudo sed -i '/swap/d' /etc/fstab
   kubectl get nodes
 
 # Control plane
-sudo firewall-cmd --permanent --add-port=6443/tcp
-sudo firewall-cmd --permanent --add-port=2379-2380/tcp
-sudo firewall-cmd --permanent --add-port=10250/tcp
-sudo firewall-cmd --permanent --add-port=10251/tcp
-sudo firewall-cmd --permanent --add-port=10252/tcp
-sudo firewall-cmd --permanent --add-port=10253/tcp
+sudo systemctl disable --now firewalld
+sudo firewall-cmd --permanent --add-port={179,2379,2380,6443,10250,10251,10252,10257,10259}/tcp
+sudo firewall-cmd --permanent --add-port=4789/udp
 sudo firewall-cmd --reload
 ```
 
 ## On k8s-wn-1 node - perform below steps
  ```sh console
 # node worker
-sudo firewall-cmd --permanent --add-port=10250-10255/tcp
-sudo firewall-cmd --permanent --add-port=30000-32767/tcp
+sudo systemctl disable --now firewalld
+sudo firewall-cmd --permanent --add-port={179,10250-10255,30000-32767}/tcp
+sudo firewall-cmd --permanent --add-port=4789/udp
 sudo firewall-cmd --reload
 
 Step f : containerd-installation  [ Follow above containerd installation steps ]
