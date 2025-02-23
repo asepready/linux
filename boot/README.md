@@ -27,6 +27,8 @@ dracut /boot/initramfs-$(uname -r).img $(uname -r)
 Remove kernel
 ```sh
 # RHEL 9/8 and Rocky 9/8
+uname -sr
+rpm -q kernel-core
 sudo dnf remove kernel-version
 package-cleanup --kernel-version
 ```
