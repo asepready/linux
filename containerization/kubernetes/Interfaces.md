@@ -7,7 +7,7 @@ network:
     enp1s0:
       dhcp4: no
       addresses:
-        - 192.168.122.128/24
+        - 192.168.122.10/24
       gateway4: 192.168.122.1
       nameservers:
           addresses: [8.8.8.8, 1.1.1.1]
@@ -22,7 +22,7 @@ ip addr show dev enp1s0
 
 #/etc/hosts
 127.0.0.1 localhost
-192.168.122.128 control.master control
-192.168.122.129 node01.worker node01
-192.168.122.130 node02.worker node02
+192.168.122.10 control.master control
+192.168.122.11 node01.worker node1
+192.168.122.12 node02.worker node2
 ```

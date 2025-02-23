@@ -71,12 +71,12 @@ Runc is a standardized runtime for spawning and running containers on Linux acco
   sudo curl -L https://raw.githubusercontent.com/containerd/containerd/main/containerd.service -o /etc/systemd/system/containerd.service
 
 # Enable IPv4 packet forwarding
-sudo modprobe overlay
-sudo modprobe br_netfilter
 cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
 overlay
 br_netfilter
 EOF
+sudo modprobe overlay
+sudo modprobe br_netfilter
 
 cat <<EOF | sudo tee /etc/sysctl.d/kubernetes.conf
 net.bridge.bridge-nf-call-ip6tables = 1
