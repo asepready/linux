@@ -26,5 +26,8 @@ qemu-img convert -c \
 /home/$USER/kvm/podman.qcow2
 
 
-# RHEL / Rocky Linux 9
+# RHEL / Rocky Linux 9 # minimalist
 sudo dnf install container-tools
+
+
+sudo dnf install podman.x86_64 cockpit-podman.noarch pcp-pmda-podman.x86_64 podman-docker.noarch podman-plugins.x86_64 podman-remote.x86_64 podman-tests.x86_64 python3-podman.noarch container-tools.noarch
