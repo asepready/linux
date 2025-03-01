@@ -2,6 +2,10 @@
 dnf install qemu-kvm libvirt virt-manager virt-install
 dnf install epel-release -y
 dnf -y install bridge-utils virt-top libguestfs-tools virt-viewer
+
+# Or Options
+yum group install "Virtualization Tools" --setopt=group_package_types=mandatory,default,optional
+
 systemctl start libvirtd
 systemctl enable libvirtd
 systemctl status libvirtd
