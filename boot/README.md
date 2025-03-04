@@ -28,7 +28,18 @@ Remove kernel
 ```sh
 # RHEL 9/8 and Rocky 9/8
 uname -sr
-rpm -q kernel-core
+rpm -q kernel
+grubby --default-kernel
+
+# Set Default kernel
+ls /boot/vm*
+grubby --set-default /boot/vmlinuz-5.14.0-70.26.1.el9_0.x86_64
+
+# Delete Auto 
+grep limit /etc/dnf/dnf.conf
+
+
 sudo dnf remove kernel-version
+sudo dnf remove --oldinstallonly kernel-version
 package-cleanup --kernel-version
 ```

@@ -21,6 +21,23 @@ podman run -d -p 8080:80 --name webserver quay.io/rhatdan/myimage
 # Konsole ke dalam kontainer
 podman exec -ti webserver /bin/sh
 ```
+2.1 Jenis-Jenis Restart Policy
+```sh 
+# Podman mendukung beberapa jenis restart policy, yaitu:
+## no | Tidak ada restart otomatis. Default jika tidak ditentukan.
+## on-failure[:max] | Restart hanya jika container keluar dengan status error (non-zero exit code). Opsi :max opsional untuk membatasi jumlah percobaan restart.
+## always | Selalu restart container tanpa syarat, termasuk setelah host reboot.
+## unless-stopped | Restart container kecuali container dihentikan secara manual oleh pengguna.
+
+podman run -d -p 8080:80 --name webserver --restart=no quay.io/rhatdan/myimage
+# or
+podman run -d -p 8080:80 --name webserver --restart=always quay.io/rhatdan/myimage
+# or
+podman run -d -p 8080:80 --name webserver --restart=on-failure:5 quay.io/rhatdan/myimage
+# or
+podman run -d -p 8080:80 --name webserver --restart=unless-stopped quay.io/rhatdan/myimage
+```
+
 3. Menggunakan Volume
 ```sh
 # Membuat volume:
