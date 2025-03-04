@@ -41,5 +41,6 @@ grep limit /etc/dnf/dnf.conf
 
 sudo dnf remove kernel-version
 sudo dnf remove --oldinstallonly kernel-version
-package-cleanup --kernel-version
+sudo dnf autoremove # remove for package no use
+sudo dnf clean all # remove for cache package 
 ```
