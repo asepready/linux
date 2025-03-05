@@ -30,9 +30,10 @@ qemu-img convert -c \
 sudo dnf config-manager --set-enabled crb
 sudo dnf install epel-release
 sudo dnf clean all
-sudo dnf install container-tools
 sudo dnf check-update
-sudo dnf install podman-compose
+
+sudo dnf install container-tools
+#sudo dnf install podman-compose
 
 # Or Podman  Compose
 sudo dnf install python3 python3-pip

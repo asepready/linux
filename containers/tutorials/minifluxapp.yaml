@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    io.kubernetes.cri-o.SandboxID/db: df86460c72d7e5a0d2e71a3d97c658f70a35441e2bf16cc442e6531e7a1ab699
+    io.kubernetes.cri-o.SandboxID/miniflux: df86460c72d7e5a0d2e71a3d97c658f70a35441e2bf16cc442e6531e7a1ab699
+  creationTimestamp: "2025-03-04T10:42:29Z"
+  labels:
+    app: minifluxapp
+  name: minifluxapp
+spec:
+  containers:
+  - args:
+    - postgres
+    env:
+    - name: POSTGRES_PASSWORD
+      value: dbpasswd
+    - name: POSTGRES_USER
+      value: dbadmin
+    image: docker.io/library/postgres:latest
+    name: db
+    ports:
+    - containerPort: 8080
+      hostPort: 8080
+    volumeMounts:
+    - mountPath: /var/lib/postgresql/data
+      name: miniflux-db-pvc
+  - env:
+    - name: ADMIN_USERNAME
+      value: admin
+    - name: ADMIN_PASSWORD
+      value: adminpass
+    - name: DATABASE_URL
+      value: postgres://dbadmin:dbpasswd@localhost/miniflux?sslmode=disable
+    - name: RUN_MIGRATIONS
+      value: "1"
+    - name: CREATE_ADMIN
+      value: "1"
+    image: ghcr.io/miniflux/miniflux:latest
+    name: miniflux
+    securityContext:
+      runAsNonRoot: true
+  volumes:
+  - name: miniflux-db-pvc
+    persistentVolumeClaim:
+      claimName: miniflux-db

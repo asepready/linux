@@ -14,7 +14,7 @@ podman run --name=db -d --restart always --pod=pod-miniflux \
 --health-cmd="CMD-SHELL pg_isready -U miniflux" docker.io/library/postgres:latest
 
 podman run --name=miniflux -d --restart=always --pod=pod-miniflux \
--e DATABASE_URL=postgres://<db-user>:<db-pass>@localhost/miniflux?sslmode=disable \
+-e DATABASE_URL=postgres://dbadmin:dbpasswd@localhost/miniflux?sslmode=disable \
 -e RUN_MIGRATIONS=1 \
 -e CREATE_ADMIN=1 \
 -e ADMIN_USERNAME=<admin-user> \
