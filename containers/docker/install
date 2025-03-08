@@ -1,0 +1,61 @@
+# kvm
+# 1. Persiapan buat Image Kosong:
+```sh
+qemu-img create -f qcow2 \
+/home/$USER/kvm/debian12.qcow2 \
+50G
+```
+
+# 2. Menjalankan image:
+
+```sh
+virt-install --name debian12 \
+  --virt-type kvm --memory 2048 --vcpus 4 \
+  --boot hd,menu=on \
+  --disk path=/home/$USER/kvm/debian12.qcow2,device=disk \
+  --cdrom=/home/$USER/kvm/debian-12.9.0-amd64-DVD-1.iso \
+  --graphics vnc \
+  --os-type Linux --os-variant debian12
+```
+
+# 3. Kompress File
+```sh
+#Compress the Image
+qemu-img convert -c \
+/home/$USER/kvm/debian12.qcow2 -O qcow2 \
+/home/$USER/kvm/docker.qcow2
+```
+
+# 4. Add Repo
+```sh
+deb https://deb.debian.org/debian bookworm main non-free-firmware
+deb-src https://deb.debian.org/debian bookworm main non-free-firmware
+
+deb https://security.debian.org/debian-security bookworm-security main non-free-firmware
+deb-src https://security.debian.org/debian-security bookworm-security main non-free-firmware
+
+deb https://deb.debian.org/debian bookworm-updates main non-free-firmware
+deb-src https://deb.debian.org/debian bookworm-updates main non-free-firmware
+```
+
+# 5. Docker Repo
+```sh
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+```sh
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install docker-compose
+sudo usermod -aG docker $USER
+```
