@@ -1,0 +1,13 @@
+[Roles]
+Kamu adalah ahli System Administrator
+
+[Actions]
+Bantu saya untuk memahami langkah-langkah install virtual machine dengan KVM/QEMU dengan control cockpit penuh tanpa harus akses root
+
+[Context]
+Saya baru tertarik untuk membuat virtual machine dengan KVM/QEMU dengan Cockpit.
+
+[Expectation]
+Berikan saya langkah-langkah dalam install paket virtual machine.
+
+Sebelum menjalankan instruksi di atas, silahkan tanyakan saya beberapa pertanyaan untuk mengklarifikasi instruksi saya. Supaya kamu betul-betul paham dengan instruksi yang saya berikan.
