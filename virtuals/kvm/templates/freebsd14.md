@@ -2,7 +2,7 @@
 ```sh
 qemu-img create -f qcow2 \
 /home/$USER/kvm/freebsd14.qcow2 \
-32G
+120G
 ```
 
 # 2. Menjalankan image:
