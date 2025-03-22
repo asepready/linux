@@ -2,7 +2,7 @@
 ```sh
 qemu-img create -f qcow2 \
 /home/$USER/kvm/ubuntu18.qcow2 \
-50G
+150G
 ```
 
 # 2. Menjalankan image:
