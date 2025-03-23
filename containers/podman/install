@@ -20,6 +20,20 @@ virt-install --name rocky9 \
 
 # 3. Kompress File
 ```sh
+cat <<EOF | sudo tee /etc/sysctl.d/1-ipforward.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+cat <<EOF | sudo tee /etc/sysctl.d/container.conf
+net.ipv4.ip_unprivileged_port_start=0
+fs.file-max = 65536
+vm.max_map_count=262144
+EOF
+
+sudo sysctl --system
+
 #Compress the Image
 qemu-img convert -c \
 /home/$USER/kvm/rocky9.qcow2 -O qcow2 \
