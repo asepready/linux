@@ -2,7 +2,7 @@
 ```sh
 qemu-img create -f qcow2 \
 /home/$USER/kvm/freebsd14.qcow2 \
-120G
+50G
 ```
 
 # 2. Menjalankan image:
@@ -13,7 +13,7 @@ virt-install --name freebsd14 \
   --boot hd,menu=on \
   --disk path=/home/$USER/kvm/freebsd14.qcow2,device=disk \
   --cdrom=/home/$USER/kvm/FreeBSD-14.1-RELEASE-amd64-dvd1.iso \
-  --graphics spice \
+  --graphics vnc \
   --os-type FreeBSD --os-variant freebsd14.0
 ```
 
