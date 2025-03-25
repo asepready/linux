@@ -2,7 +2,7 @@
 ```sh
 qemu-img create -f qcow2 \
 /home/$USER/kvm/alpinelinux3.qcow2 \
-32G
+50G
 ```
 
 # 2. Menjalankan image:
@@ -12,9 +12,9 @@ virt-install --name alpinelinux3 \
   --virt-type kvm --memory 2048 --vcpus 4 \
   --boot hd,menu=on \
   --disk path=/home/$USER/kvm/alpinelinux3.qcow2,device=disk \
-  --cdrom=/home/$USER/kvm/alpine-virt-3.20.3-x86.iso \
-  --graphics spice \
-  --os-type Linux --os-variant alpinelinux3.17
+  --cdrom=/home/$USER/kvm/alpine-virt-3.21.3-x86_64.iso \
+  --graphics vnc \
+  --os-type Linux --os-variant alpinelinux3.20
 ```
 
 # 3. Kompress File
