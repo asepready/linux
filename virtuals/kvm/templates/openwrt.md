@@ -1,1 +1,0 @@
-qemu-img convert -f raw -O qcow2 openwrt-21.02.1-x86-64-generic-squashfs-combined.img openwrt-21.02.1.qcow2
