@@ -1,0 +1,32 @@
+# moodle
+LMS Moodle
+
+```sh
+# Configure a domain name
+FQDN=elearn.labdocker.net
+
+# Install the moodle source code
+sudo mkdir -p /home/docker/${FQDN} /home/data/${FQDN}
+sudo chown -R $USER:docker /home/docker/${FQDN} /home/data/${FQDN}
+
+cd /home/data/${FQDN}
+git clone https://github.com/moodle/moodle.git src && cd src
+git config --global --add safe.directory /home/data/${FQDN}
+git branch -a
+git branch --track MOODLE_401_STABLE origin/MOODLE_401_STABLE
+chown -R www-data:docker ../src
+chmod -R g+w ../src
+ls -l
+git status
+git checkout MOODLE_401_STABLE
+
+# Configure Docker Compose to host Moodle
+cd /home/docker/${FQDN}
+nano compose.yml
+
+docker compose pull
+
+nano /home/data/${FQDN}/nginx/default.conf
+
+# Run
+docker-compose up -d && docker-compose logs -f
