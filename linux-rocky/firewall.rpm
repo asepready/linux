@@ -1,0 +1,10 @@
+# Port
+sudo firewall-cmd --permanent --add-port=80/tcp
+
+# Service
+sudo firewall-cmd --add-service=cockpit --permanent
+
+# Reload
+sudo firewall-cmd --reload
+sudo firewall-cmd --list-all
+
