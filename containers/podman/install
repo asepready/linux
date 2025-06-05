@@ -50,8 +50,9 @@ sudo dnf install container-tools
 #sudo dnf install podman-compose
 
 # Or Podman  Compose
-sudo dnf install python3 python3-pip
-pip3 install --user podman-compose && ~/.local/bin/podman-compose --version
+git clone https://github.com/containers/podman-compose 
+cd podman-compose
+sudo python3 setup.py install
 
 echo $PATH
 echo 'export PATH=$PATH:~/.local/bin' >> ~/.bashrc
