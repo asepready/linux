@@ -1,0 +1,4 @@
+lsblk
+
+
+dd if=./pop-os_22.04_amd64_intel_53.iso of=/dev/sda bs=1M conv=sync
