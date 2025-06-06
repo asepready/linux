@@ -1,24 +1,3 @@
-# kvm
-# 1. Persiapan buat Image Kosong:
-```sh
-qemu-img create -f qcow2 \
-/home/$USER/kvm/rocky9.qcow2 \
-50G
-```
-
-# 2. Menjalankan image:
-
-```sh
-virt-install --name rocky9 \
-  --virt-type kvm --memory 2048 --vcpus 4 \
-  --boot hd,menu=on \
-  --disk path=/home/$USER/kvm/rocky9.qcow2,device=disk \
-  --cdrom=/home/$USER/kvm/Rocky-9.5-x86_64-minimal.iso \
-  --graphics vnc \
-  --os-type Linux --os-variant rocky9
-```
-
-# 3. Kompress File
 ```sh
 cat <<EOF | sudo tee /etc/sysctl.d/1-ipforward.conf
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -34,10 +13,11 @@ EOF
 
 sudo sysctl --system
 
-#Compress the Image
-qemu-img convert -c \
-/home/$USER/kvm/rocky9.qcow2 -O qcow2 \
-/home/$USER/kvm/podman.qcow2
+# Ubuntu / Debian
+sudo apt update
+sudo apt-get install runc -y
+sudo apt-get -y install podman
+
 
 
 # RHEL / Rocky Linux 9 # minimalist
