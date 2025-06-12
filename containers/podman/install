@@ -12,23 +12,11 @@ vm.max_map_count=262144
 EOF
 
 sudo sysctl --system
-
+########################################################
 # Ubuntu / Debian
 sudo apt update
 sudo apt-get install runc -y
 sudo apt-get -y install podman
-
-
-
-# RHEL / Rocky Linux 9 # minimalist
-sudo dnf config-manager --set-enabled crb
-sudo dnf install epel-release
-sudo dnf clean all
-sudo dnf check-update
-
-sudo dnf install container-tools
-#sudo dnf install podman-compose
-
 # Or Podman  Compose
 git clone https://github.com/containers/podman-compose 
 cd podman-compose
@@ -41,4 +29,26 @@ source ~/.bashrc
 export COMPOSE_PROVIDER=podman
 echo 'export COMPOSE_PROVIDER=podman' >> ~/.bashrc
 source ~/.bashrc
+########################################################
+# RHEL / Rocky Linux 9 # minimalist
+sudo dnf config-manager --set-enabled crb
+sudo dnf install epel-release
+sudo dnf clean all
+sudo dnf check-update
 
+sudo dnf install container-tools
+#sudo dnf install podman-compose
+
+# Rootless environment
+########################################
+# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
+
+# /etc/subuid and /etc/subgid configuration
+# cat /etc/subuid
+asepready:100000:65536
+test:165536:65536
+
+# The format of this file is USERNAME:UID:RANGE
+#- username as listed in /etc/passwd or in the output of getpwent.
+#- The initial UID allocated for the user.
+#- The size of the range of UIDs allocated for the user.
