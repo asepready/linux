@@ -15,8 +15,8 @@ sudo sysctl --system
 ########################################################
 # Ubuntu / Debian
 sudo apt update
-sudo apt-get install runc -y
 sudo apt-get -y install podman
+sudo apt-get -y install runc uidmap
 # Or Podman  Compose
 git clone https://github.com/containers/podman-compose 
 cd podman-compose
