@@ -43,12 +43,20 @@ sudo dnf install container-tools
 ########################################
 # https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 
-# /etc/subuid and /etc/subgid configuration
-# cat /etc/subuid
-asepready:100000:65536
-test:165536:65536
+# Edit /etc/containers/registries.conf
+unqualified-search-registries = [
+  "127.0.0.1",
+  "localhost",
+  "docker.io",
+  "registry.access.redhat.com",
+  "registry.redhat.io",
+]
 
-# The format of this file is USERNAME:UID:RANGE
-#- username as listed in /etc/passwd or in the output of getpwent.
-#- The initial UID allocated for the user.
-#- The size of the range of UIDs allocated for the user.
+[[registry]]
+insecure = true
+location = "localhost:65535"
+
+short-name-mode = "enforcing"
+
+# Create registry local
+podman run --name myregistry -p 65535:5000 -d docker.io/library/registry:latest
