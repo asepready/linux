@@ -54,9 +54,25 @@ unqualified-search-registries = [
 
 [[registry]]
 insecure = true
+prefix = "localhost:65535"
 location = "localhost:65535"
 
 short-name-mode = "enforcing"
 
 # Create registry local
-podman run --name myregistry -p 65535:5000 -d docker.io/library/registry:latest
+mkdir $HOME/.config/containers/registry
+
+podman run -it \
+  --name registry \
+  --volume $HOME/.config/containers/registry:/var/lib/registry:Z \
+  --restart=always \
+  -p 65535:5000 -d \
+  quay.io/libpod/registry:2
+
+# default log driver
+mkdir -p $HOME/.config/containers/containers.conf.d
+echo '[containers]' > $HOME/.config/containers/containers.conf.d/log_driver.conf
+echo 'log_driver="journald"' >> $HOME/.config/containers/containers.conf.d/log_driver.conf
+
+#Test
+podman image tag quay.io/libpod/alpine:latest localhost:65535/alpine:latest
