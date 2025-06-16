@@ -5,8 +5,10 @@ net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
 EOF
 
+## 
 cat <<EOF | sudo tee /etc/sysctl.d/container.conf
-net.ipv4.ip_unprivileged_port_start=0
+kernel.unprivileged_userns_clone = 1
+net.ipv4.ip_unprivileged_port_start = 0
 fs.file-max = 65536
 vm.max_map_count=262144
 EOF
@@ -73,6 +75,12 @@ podman run -it \
 mkdir -p $HOME/.config/containers/containers.conf.d
 echo '[containers]' > $HOME/.config/containers/containers.conf.d/log_driver.conf
 echo 'log_driver="journald"' >> $HOME/.config/containers/containers.conf.d/log_driver.conf
+
+# Add User to Subuid and Subgid
+sudo usermod --add-subuids 100000-165535 $USER
+sudo usermod --add-subgids 100000-165535 $USER
+# Check
+grep $USER /etc/subuid /etc/subgid
 
 #Test
 podman image tag quay.io/libpod/alpine:latest localhost:65535/alpine:latest
