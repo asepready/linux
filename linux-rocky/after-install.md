@@ -64,7 +64,7 @@ Get your GPU firing on all cylinders. If you’ve got proprietary GPU hardware, 
 ```sh
 $ ARCH=$(/bin/arch)
 $ distribution=$(. /etc/os-release;echo $ID`rpm -E "%{?rhel}%{?fedora}"`)
-$ sudo dnf config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/$distribution/${ARCH}/cuda-rhel8.repo
+$ sudo dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/$distribution/${ARCH}/cuda-$distribution.repo
 $ sudo dnf install -y kernel kernel-core kernel-modules \
 kernel-devel-$(uname -r) kernel-headers-$(uname -r)
 $ sudo dnf module install nvidia-driver
