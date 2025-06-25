@@ -1,0 +1,1 @@
+podman run -it --rm --name windows -p 8006:8006 --device=/dev/kvm --device=/dev/net/tun --cap-add NET_ADMIN -v "${PWD:-.}/storage:/storage:z" --stop-timeout 120 -d dockurr/windows
