@@ -8,7 +8,8 @@ $ sudo hostnamectl  --static hostname "kickass-workstation"
 
 ```sh
 $ sudo dnf -y update
-$ sudo dnf config-manager --set-enabled crb
+$ sudo dnf config-manager --set-enabled powertools # RL8
+$ sudo dnf config-manager --set-enabled crb # RL9
 $ sudo dnf -y install epel-release
 ```
 
