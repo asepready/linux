@@ -20,17 +20,14 @@ sudo apt update
 sudo apt-get -y install podman
 sudo apt-get -y install runc uidmap
 # Or Podman  Compose
-git clone https://github.com/containers/podman-compose 
-cd podman-compose
-sudo python3 setup.py install
-
 echo $PATH
-echo 'export PATH=$PATH:~/.local/bin' >> ~/.bashrc
+echo 'docker=podman' >> ~/.bashrc
 source ~/.bashrc
 
 export COMPOSE_PROVIDER=podman
 echo 'export COMPOSE_PROVIDER=podman' >> ~/.bashrc
 source ~/.bashrc
+
 ########################################################
 # RHEL / Rocky Linux 9 # minimalist
 sudo dnf config-manager --set-enabled crb
@@ -39,7 +36,6 @@ sudo dnf clean all
 sudo dnf check-update
 
 sudo dnf install container-tools
-sudo dnf install podman-compose
 
 # Rootless environment
 ########################################
