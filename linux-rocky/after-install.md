@@ -63,12 +63,49 @@ Get your GPU firing on all cylinders. If you’ve got proprietary GPU hardware, 
 ### NVIDIA GPU drivers for Rocky Linux
 
 ```sh
-$ ARCH=$(/bin/arch)
-$ distribution=$(. /etc/os-release;echo $ID`rpm -E "%{?rhel}%{?fedora}"`)
-$ sudo dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/$distribution/${ARCH}/cuda-$distribution.repo
-$ sudo dnf install -y kernel kernel-core kernel-modules \
-kernel-devel-$(uname -r) kernel-headers-$(uname -r)
-$ sudo dnf module install nvidia-driver
+sudo dnf install --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-9.noarch.rpm
+sudo dnf install xorg-x11-server-Xorg xorg-x11-xauth -y
+
+# KDE
+sudo dnf install plasma-desktop kscreen sddm kde-gtk-config dolphin konsole kate plasma-discover firefox rocky-backgrounds sddm-breeze mpv  -y
+
+# Cude NVIDIA
+sudo dnf groupinstall "Development Tools"
+sudo dnf install kernel-devel epel-release
+sudo dnf install dkms
+sudo dnf config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/rhel9/$(uname -i)/cuda-rhel9.repo
+
+# Dependencies
+sudo dnf install kernel-headers-$(uname -r) kernel-devel-$(uname -r) tar bzip2 make automake gcc gcc-c++ pciutils elfutils-libelf-devel libglvnd-opengl libglvnd-glx libglvnd-devel acpid pkgconfig dkms
+
+sudo dnf module install nvidia-driver:latest-dkms
+
+# Disable nouveau in GRUB
+#!/etc/default/grub
+GRUB_CMDLINE_LINUX="resume=/dev/mapper/rl_localhost--live-swap rd.lvm.lv=rl_localhost-live/root rd.lvm.lv=rl_localhost-live/swap crashkernel=auto rhgb quiet nouveau.modeset=0 rd.driver.blacklist=nouveau"
+
+# BIOS
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+
+# EFI
+sudo grub2-mkconfig -o /boot/efi/EFI/rocky/grub.cfg
+
+# LOGIN NVIDIA
+nvidia-smi
+
+# Set to boot to KDE
+sudo systemctl set-default graphical.target
+sudo systemctl enable sddm
+
+# Install Flatpak
+sudo dnf install flatpak
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+# POST INSTALL
+# Download link: https://www.blackmagicdesign.com/products/davinciresolve
+sudo dnf install apr apr-util mesa-libGLU
+./DaVinci_Resolve_18.6.4_Linux.run
 ```
 
 ### AMD GPU drivers for Rocky Linux
