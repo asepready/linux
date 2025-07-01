@@ -83,6 +83,7 @@ sudo dnf module install nvidia-driver:latest-dkms
 
 # Disable nouveau in GRUB
 #!/etc/default/grub
+#GRUB_CMDLINE_LINUX="resume=/dev/mapper/rl_localhost--live-swap rd.lvm.lv=rl_localhost-live/root rd.lvm.lv=rl_localhost-live/swap crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M rhgb quiet intel_iommu=on rd.driver.blacklist=nouveau"
 GRUB_CMDLINE_LINUX="resume=/dev/mapper/rl_localhost--live-swap rd.lvm.lv=rl_localhost-live/root rd.lvm.lv=rl_localhost-live/swap crashkernel=auto rhgb quiet nouveau.modeset=0 rd.driver.blacklist=nouveau"
 
 # BIOS
