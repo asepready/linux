@@ -40,22 +40,64 @@ sudo dnf install container-tools
 # Rootless environment
 ########################################
 # https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
-
 sudo cp /etc/containers/registries.conf /etc/containers/registries.conf.sample
 
 cat <<EOF | sudo tee /etc/containers/registries.conf
 #!/etc/containers/registries.conf
 unqualified-search-registries = [
   "localhost",
+  "quay.io",
   "docker.io",
   "registry.access.redhat.com",
   "registry.redhat.io",
 ]
 
-#[[registry]]
-#insecure = true
-#prefix = "localhost:5000"
-#location = "localhost:5000"
+[[registry]]
+insecure = true
+prefix = "localhost:5000"
+location = "localhost:5000"
 
 short-name-mode = "enforcing"
 EOF
+
+# Enable Limit Resources
+########################################
+cat <<EOF | sudo tee /etc/containers/containers.conf
+#!/etc/containers/containers.conf
+[containers]
+pids_limit=0
+EOF
+
+mkdir -p /etc/systemd/system/user@.service.d
+cat <<EOF | sudo tee /etc/systemd/system/user@.service.d/delegate.conf
+[Service]
+Delegate=memory pids cpu io
+EOF
+
+sudo systemctl daemon-reload
+
+## Test
+podman container run -dt -p 5000:5000 --name registry --volume registry:/var/lib/registry:Z quay.io/lib/registry:2
+podman volume inspect registry
+cd $HOME/.config/systemd/user
+podman generate systemd --new --files --name registry
+# Enable and start the registry service
+systemctl --user daemon-reload
+systemctl --user enable --now container-registry.service
+systemctl --user start container-registry.service
+systemctl --user is-active container-registry.service
+
+# Test Podman
+# Download an image
+podman pull quay.io/rockylinux/rockylinux
+# Relable an image
+podman tag quay.io/rockylinux/rockylinux localhost:5000/rockylinux
+# Upload to the local registry
+podman image push localhost:5000/rockylinux --tls-verify=false
+
+podman image search localhost:5000/ --tls-verify=false
+
+podman image rm localhost:5000/rockylinux quay.io/rockylinux/rockylinux
+# Run a container
+podman  run -it  -m 512M localhost:5000/rockylinux /bin/bash
+

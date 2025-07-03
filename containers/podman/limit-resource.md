@@ -8,8 +8,7 @@ pids_limit=0
 ## Create a file under "/etc/systemd/system/user@.service.d/delegate.conf" with below content :
 
 ```sh
-[Service]
-Delegate=memory pids cpu io
+
 ```
 
 systemctl daemon-reload
