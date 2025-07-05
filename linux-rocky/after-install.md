@@ -63,34 +63,26 @@ Get your GPU firing on all cylinders. If you’ve got proprietary GPU hardware, 
 ### NVIDIA GPU drivers for Rocky Linux
 
 ```sh
-sudo dnf install --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-9.noarch.rpm
-sudo dnf install xorg-x11-server-Xorg xorg-x11-xauth -y
-
-# KDE
-sudo dnf install plasma-desktop kscreen sddm kde-gtk-config dolphin konsole kate plasma-discover firefox rocky-backgrounds sddm-breeze mpv  -y
-
 # Cude NVIDIA
-sudo dnf groupinstall "Development Tools"
-sudo dnf install kernel-devel epel-release
-sudo dnf install dkms
+sudo dnf install epel-release -y
+sudo dnf groupinstall "Development Tools" -y
+sudo dnf install kernel-devel -y
+sudo dnf install dkms -y
+### Add Repo
 sudo dnf config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/rhel9/$(uname -i)/cuda-rhel9.repo
 
 # Dependencies
-sudo dnf install kernel-headers-$(uname -r) kernel-devel-$(uname -r) tar bzip2 make automake gcc gcc-c++ pciutils elfutils-libelf-devel libglvnd-opengl libglvnd-glx libglvnd-devel acpid pkgconfig dkms
+sudo dnf install kernel-headers-$(uname -r) kernel-devel-$(uname -r) tar bzip2 make automake gcc gcc-c++ pciutils elfutils-libelf-devel libglvnd-opengl libglvnd-glx libglvnd-devel acpid pkgconf dkms -y
 
-sudo dnf module install nvidia-driver:latest-dkms
+sudo dnf module install nvidia-driver:latest-dkms -y
 
 # Disable nouveau in GRUB
+sudo grubby --args="nouveau.modeset=0 rd.driver.blacklist=nouveau" --update-kernel=ALL
 #!/etc/default/grub
-#GRUB_CMDLINE_LINUX="resume=/dev/mapper/rl_localhost--live-swap rd.lvm.lv=rl_localhost-live/root rd.lvm.lv=rl_localhost-live/swap crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M rhgb quiet intel_iommu=on rd.driver.blacklist=nouveau"
 GRUB_CMDLINE_LINUX="resume=/dev/mapper/rl_localhost--live-swap rd.lvm.lv=rl_localhost-live/root rd.lvm.lv=rl_localhost-live/swap crashkernel=auto rhgb quiet nouveau.modeset=0 rd.driver.blacklist=nouveau"
 
-# BIOS
-sudo grub2-mkconfig -o /boot/grub2/grub.cfg
-
-# EFI
-sudo grub2-mkconfig -o /boot/efi/EFI/rocky/grub.cfg
+# For systems with secure boot enabled you need to perform this step:
+sudo mokutil --import /var/lib/dkms/mok.pub
 
 #########RESTART##########
 sudo reboot
@@ -115,7 +107,7 @@ sudo dnf install apr apr-util mesa-libGLU
 ### AMD GPU drivers for Rocky Linux
 
 ```sh
-$ sudo dnf -y install <https://repo.radeon.com/amdgpu-install/latest/rhel/9.4/amdgpu-install-6.1.60102-1.el9.noarch.rpm>
+$ sudo dnf -y install https://repo.radeon.com/amdgpu-install/latest/rhel/9.6/amdgpu-install-6.4.60401-1.el9.noarch.rpm
 $ sudo amdgpu-install -y --accept-eulaEferfr
 ```
 
