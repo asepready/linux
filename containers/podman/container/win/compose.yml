@@ -1,0 +1,61 @@
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows-10
+    environment:
+      USERNAME: "sysadmin"
+      PASSWORD: "admin"
+      VERSION: "10"
+      REGION: "en-US"
+      KEYBOARD: "en-US"
+      RAM: "8G"
+      CPU: "4"
+      DISK: "64G"
+      GPU: "true"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+      - /dev/kfd
+      - /dev/dri
+      #- /dev/video0
+      #- /dev/video1
+      #- /dev/input/mice
+      #- /dev/nvidia0
+      #- /dev/nvidiactl
+      #- /dev/nvidia-uvm
+      #- /dev/nvidia-modeset
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      devices:
+    #        - driver: nvidia
+    #          count: all
+    #          capabilities: [gpu]
+    security_opt: no-new-privileges
+    cap_drop: ALL
+    cap_add: NET_ADMIN
+    ports:
+      - 8006:8006
+      - 3389:3389/tcp
+      - 3389:3389/udp
+    volumes:
+      - ./data/win:/storage:Z
+    restart: unless-stopped
+    stop_grace_period: 2m
+    depends_on:
+      - linux
+    networks:
+      vlan:
+        ipv4_address: 172.16.0.2 # Optional: assign a static IP
+
+networks:
+  vlan:
+    name: vlan
+    driver: macvlan
+    #driver_opts:
+    #  parent: eth0
+    ipam:
+      config:
+        - subnet: "172.16.0.0/24"
+          ip_range: "172.16.0.64/26"
+          gateway: "172.16.0.1"

@@ -107,8 +107,11 @@ sudo dnf install apr apr-util mesa-libGLU
 ### AMD GPU drivers for Rocky Linux
 
 ```sh
-$ sudo dnf -y install https://repo.radeon.com/amdgpu-install/latest/rhel/9.6/amdgpu-install-6.4.60401-1.el9.noarch.rpm
-$ sudo amdgpu-install -y --accept-eulaEferfr
+sudo usermod -a -G render,video $LOGNAME
+sudo dnf -y install https://repo.radeon.com/amdgpu-install/latest/rhel/9.6/amdgpu-install-6.4.60401-1.el9.noarch.rpm
+sudo dnf install amdgpu-dkms rocm
+sudo amdgpu-install --usecase=dkms
+sudo modprobe amdgpu
 ```
 
 ## Reboot your Rocky Linux system
