@@ -27,5 +27,5 @@ podman run localhost/rocky-httpd /usr/bin/whereis httpd
 
 # run a container and also start [httpd]
 # map with [-p xxx:xxx] to [(Host Port):(Container Port)]
-podman run -dt -p 8081:80 localhost/rocky-httpd /usr/sbin/apachectl -D FOREGROUND
+podman run -dt --name httpd -p 8081:80 localhost/rocky-httpd /usr/sbin/apachectl -D FOREGROUND
 ```
