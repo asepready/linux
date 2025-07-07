@@ -1,3 +1,5 @@
+mkdir ~/.vim
+
 ```sh
 #~/.vimrc
 " use extended feature of vim (no compatible with vi)
@@ -18,7 +20,7 @@ set fileformats=unix,dos
 set backup
 
 " specify backup directory
-set backupdir=~/backup
+set backupdir=~/.vim
 
 " number of search histories
 set history=50

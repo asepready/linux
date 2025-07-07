@@ -1,0 +1,17 @@
+# create an empty container with [scratch]
+newcontainer=$(buildah from scratch)
+buildah containers
+# mount [scratch] container
+scratchmnt=$(buildah mount $newcontainer)
+echo $scratchmnt
+# install packages to [scratch] container
+dnf -y group install "Minimal Install" --releasever=10 --installroot=$scratchmnt
+# unmount
+buildah umount $newcontainer
+# run container
+buildah run $newcontainer bash
+cat /etc/os-release
+exit
+# add images
+buildah commit $newcontainer rockylinux-minimal:latest
+buildah images

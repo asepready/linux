@@ -5,7 +5,7 @@ net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
 EOF
 
-## 
+##
 cat <<EOF | sudo tee /etc/sysctl.d/container.conf
 kernel.unprivileged_userns_clone = 1
 net.ipv4.ip_unprivileged_port_start = 22
@@ -37,15 +37,13 @@ sudo dnf check-update
 
 sudo dnf install container-tools
 
-# Rootless environment
+# Registry Setup
 ########################################
-# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 sudo cp /etc/containers/registries.conf /etc/containers/registries.conf.sample
 
 cat <<EOF | sudo tee /etc/containers/registries.conf
 #!/etc/containers/registries.conf
 unqualified-search-registries = [
-  "localhost",
   "quay.io",
   "docker.io",
   "registry.access.redhat.com",
@@ -101,3 +99,5 @@ podman image rm localhost:5000/rockylinux quay.io/rockylinux/rockylinux
 # Run a container
 podman  run -it  -m 512M localhost:5000/rockylinux /bin/bash
 
+
+# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
