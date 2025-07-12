@@ -11,7 +11,7 @@ $ sudo dnf -y update
 $ sudo dnf config-manager --set-enabled powertools # RL8
 $ sudo dnf config-manager --set-enabled crb # RL9
 $ sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm # Repo Fedora
-$ sudo dnf -y install epel-release
+$ sudo dnf -y install epel-release epel-next-release
 ```
 
 ## Extra desktop environments
