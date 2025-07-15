@@ -13,7 +13,7 @@ dnf install epel-release -y
 # Virtualization Packages
 dnf install qemu-kvm qemu-img libvirt
 # Additional virtualization management
-dnf install virt-manager
+dnf install virt-manager virt-viewer
 
 sudo systemctl enable libvirtd
 
