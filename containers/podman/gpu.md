@@ -58,7 +58,4 @@ Run the following official NVIDIA container on your host machine:
 podman run --rm --device nvidia.com/gpu=all nvidia/cuda:11.0.3-base-ubuntu20.04 nvidia-smi
 
 podman run -itd --device /dev/kfd --device /dev/dri --net=host --security-opt=no-new-privileges --cap-drop=ALL docker.io/rocm/pytorch:latest python3
-
-podman run -itd --rm --device /dev/kfd --device /dev/dri --name windows -p 8006:8006 --device=/dev/kvm --device=/dev/net/tun --cap-add NET_ADMIN -v "${PWD:-.}/storage:/storage:Z" --stop-timeout 120 dockurr/windows:10
-
 ```
