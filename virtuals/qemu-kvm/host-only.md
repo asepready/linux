@@ -1,6 +1,7 @@
 Buat File
+
 ```sh
-#tmp/host-only.xml
+#/etc/libvirt/qemu/networks/host-only.xml
 <network>
   <name>host-only</name>
   <forward mode="none"/>
@@ -15,7 +16,7 @@ Buat File
 
 ```sh
 #Add Adapter
-sudo virsh net-define /tmp/host-only.xml
+sudo virsh net-define /etc/libvirt/qemu/networks/host-only.xml
 sudo virsh net-start host-only
 sudo virsh net-autostart host-only
 sudo virsh net-list --all

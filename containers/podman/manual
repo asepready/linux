@@ -1,0 +1,119 @@
+cat <<EOF | sudo tee -a /etc/sysctl.d/99-sysctl.conf
+# Required by Elasticsearch 5.0 and later
+vm.max_map_count=262144
+fs.file-max=65536
+# enable forwarding so the Docker networking works as expected
+net.ipv4.ip_forward=1
+#net.ipv4.ip_unprivileged_port_start=22
+# Decrease the maximum number of TCP retransmissions to 5 as recommended for Elasticsearch TCP retransmission timeout.
+net.ipv4.tcp_retries2=5
+# Make sure the host doesn't swap too early
+vm.swappiness=1
+EOF
+
+sudo sysctl --system
+
+sudo dnf install -y podman podman-remote
+
+# Disable SELinux for Podman
+sudo sed -i 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+
+# Disable firewalld
+sudo systemctl disable --now firewalld
+
+########################################################
+# for Elasticsearch
+sudo /sbin/grubby --update-kernel=ALL --args='cgroup_enable=memory cgroup.memory=nokmem swapaccount=1'
+sudo groupadd elastic
+sudo groupadd podman
+
+# Add User to Group
+sudo useradd -g "elastic" -G "podman" elastic
+
+cat <<EOF | sudo tee /etc/sudoers.d/99-ece-users
+elastic ALL=(ALL) NOPASSWD:ALL
+EOF
+
+cat <<EOF | sudo tee -a /etc/security/limits.conf
+*                soft    nofile         1024000
+*                hard    nofile         1024000
+*                soft    memlock        unlimited
+*                hard    memlock        unlimited
+elastic          soft    nofile         1024000
+elastic          hard    nofile         1024000
+elastic          soft    memlock        unlimited
+elastic          hard    memlock        unlimited
+root             soft    nofile         1024000
+root             hard    nofile         1024000
+root             soft    memlock        unlimited
+EOF
+
+sudo su - elastic
+########################################################
+sudo mkdir -p /etc/systemd/system/podman.socket.d
+cat <<EOF | sudo tee /etc/systemd/system/podman.socket.d/podman.conf
+[Socket]
+ListenStream=
+ListenStream=/var/run/docker.sock
+SocketMode=770
+SocketUser=elastic
+SocketGroup=podman
+EOF
+
+sudo chown root:root /etc/systemd/system/podman.socket.d/podman.conf
+sudo chmod 0644 /etc/systemd/system/podman.socket.d/podman.conf
+
+sudo systemctl daemon-reload
+
+########################################################
+cat <<EOF | sudo tee /usr/bin/docker
+#!/bin/bash
+podman-remote --url unix:///var/run/docker.sock "$@"
+EOF
+
+sudo chmod 0755 /usr/bin/docker
+
+########################################################
+sudo systemctl enable podman.service
+sudo systemctl enable podman-restart.service
+
+########################################################
+mkdir -p ~/.docker/cli-plugins
+curl -sSL https://github.com/docker/compose/releases/download/v2.39.1/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+chmod +x ~/.docker/cli-plugins/docker-compose
+docker compose version
+
+echo $PATH
+echo 'export DOCKER_HOST=unix:///run/docker.sock' >> ~/.bashrc
+echo 'docker=podman' >> ~/.bashrc
+source ~/.bashrc
+
+########################################################
+# Storage Extension
+# https://www.redhat.com/en/blog/working-container-storage-library-and-tools-red-hat-enterprise-linux#:~:text=Storage%20Configuration
+#/etc/containers/storage.conf
+[storage]
+driver = "overlay"
+
+runroot = "/mnt/data/docker/runroot/"
+graphroot = "/mnt/data/docker"
+
+echo "overlay" | sudo tee -a /etc/modules-load.d/overlay.conf
+
+# Format Disk
+sudo mkfs.xfs /dev/vdb
+
+# Create mount point
+sudo install -o elastic -g podman -d -m 700 /mnt/data
+
+# Mount disk permanently
+echo "/dev/vdb	/mnt/data	xfs	defaults,nofail,x-systemd.automount,prjquota,pquota  0 2" | sudo tee -a /etc/fstab
+
+# restart local-fs.target to apply changes
+sudo systemctl restart local-fs.target
+
+# Permissions
+ls /mnt/data
+sudo chown elastic:elastic /mnt/data
+# Create Data
+sudo install -o elastic -g elastic -d -m 700 /mnt/data/docker
