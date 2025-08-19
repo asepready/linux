@@ -17,7 +17,7 @@ sudo dnf install virt-manager virt-viewer
 
 sudo systemctl enable libvirtd
 
-sudo usermod -aG libvirt,kvm,qemu $USER
+sudo usermod -aG libvirt,qemu $USER
 
 sudo systemctl start libvirtd; sudo systemctl status libvirtd
 
