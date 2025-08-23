@@ -84,22 +84,11 @@ sudo reboot now
 #Now the two versions should match.
 
 #Step 2 – Download VMware Workstation / Player on Rocky Linux 9
-#Depending on your preferences, download the VMware Workstation tool that works best for you.
-
 #VMware Workstation Player
-#This tool can be downloaded from the official VMware Player downloads page.
-
-#VMware WorkstationPlayer 16 on Rocky Linux 9
-#You can also use wget to pull the version.
-
 wget https://download3.vmware.com/software/WKST-PLAYER-1624/VMware-Player-Full-16.2.4-20089737.x86_64.bundle
 
+#OR
 #VMware Workstation Pro
-#VMware Workstation Pro can be downloaded from the VMware Workstation Pro downloads page
-
-#VMware WorkstationPlayer 16 on Rocky Linux 9 18
-#You can also pull the version using wget;
-
 wget https://download3.vmware.com/software/WKST-1624-LX/VMware-Workstation-Full-16.2.4-20089737.x86_64.bundle
 
 #Step 3 – Install VMware Workstation / Player on Rocky Linux 9
@@ -108,6 +97,7 @@ wget https://download3.vmware.com/software/WKST-1624-LX/VMware-Workstation-Full-
 # For VMware Player
 chmod +x VMware-Player-\*.x86_64.bundle
 
+#Or
 #For VMware Workstation Pro
 chmod +x VMware-Workstation-Full-\*.x86_64.bundle
 
@@ -116,6 +106,7 @@ chmod +x VMware-Workstation-Full-\*.x86_64.bundle
 #For VMware Player
 sudo ./VMware-Player-\*.x86_64.bundle
 
+#Or
 #For Workstation pro
 sudo ./VMware-Workstation-Full-\*.x86_64.bundle
 
