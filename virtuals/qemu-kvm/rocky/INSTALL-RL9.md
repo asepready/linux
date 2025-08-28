@@ -26,6 +26,7 @@ sudo chown -R $USER:libvirt /var/lib/libvirt/
 # Additional Bridge
 sudo dnf install bridge-utils
 
+sudo cp /etc/sysctl.d/99-sysctl.conf /etc/sysctl.d/99-sysctl.conf.bak
 export MAIN_CONN=enp3s4f0
 bash -x <<EOS
 echo "net.ipv4.ip_forward=1" | sudo tee /etc/sysctl.d/99-sysctl.conf
