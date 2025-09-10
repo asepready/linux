@@ -20,4 +20,5 @@ apt install libsdl2-dev libsdl2-2.0-0 -y;
 # Upgrade PNETLab v6 (20.04)
 curl -sSL https://drive.labhub.eu.org/0:/upgrades_pnetlab/focal/install_pnetlab_v6.sh | bash
 curl -sSL https://labhub.eu.org/api/raw/?path=/upgrades_pnetlab/focal/install_pnetlab_v6.sh | bash
+curl -sSL https://download.netlabplus.com/pnetlab/install_pnetlab_v6.sh | bash
 ```
