@@ -2,7 +2,7 @@ sudo apt-get install --install-recommends linux-generic
 sudo apt-get install --install-recommends linux-image-generic linux-headers-generic
 sudo apt-get install xserver-xorg
 
-# upgrade kernel
+# downgrade kernel
 
 # allow removal of running 5.4 kernel in the ncurses blue prompt - answer 'No'
 

@@ -11,6 +11,9 @@ Login as ROOT User and update Ubuntu Server
 ========================================
 sudo su -
 
+apt install software-properties-common curl gnupg2 wget -y
+add-apt-repository ppa:ondrej/php
+
 apt update
 apt upgrade
 #apt purge netplan.io
