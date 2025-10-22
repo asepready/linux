@@ -1,21 +1,30 @@
 Ubuntu Netplan
 nano /etc/netplan/50-cloud-init.yaml
-```sh 
+
+```sh
 network:
   version: 2
+  renderer: networkd
   ethernets:
-    enp0s31f6:
-      dhcp4: true
+    eth0:
+      dhcp4: no
   bridges:
     br0:
-      dhcp4: yes
+      addresses: [ "172.22.97.21/20" ]
+      nameservers:
+        addresses: [8.8.8.8,8.8.4.4]
+      routes:
+        - to: default
+          via: 172.22.97.1
+          on-link: true
       interfaces:
-        - enp0s31f6
+        - eth0
 ```
 
 sudo netplan try
 
 Create file kvm-hostbridge.xml
+
 ```sh
 <network>
   <name>hostbridge</name>
