@@ -119,4 +119,5 @@ sudo modprobe amdgpu
 
 ```sh
 $ sudo reboot
+$ sudo dnf clean all
 ```
