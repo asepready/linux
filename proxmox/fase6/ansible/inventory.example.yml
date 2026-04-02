@@ -1,0 +1,20 @@
+---
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+  vars:
+    proxmox_api_host: pve.lab.local
+    # Token parts: user@realm, token name, secret → header PVEAPIToken=user@realm!name=secret
+    proxmox_api_user: automation@pam
+    proxmox_api_token_id: ansible
+    proxmox_api_token_secret: CHANGE_ME
+    proxmox_validate_certs: false
+
+    proxmox_node: pve
+    template_vmid: 9000
+    new_vmid: 150
+    vm_name: ansible-clone-test
+    # Optional: target storage for full clone disks; omit to use PVE defaults
+    # clone_target_storage: local-lvm
+    clone_full: 1

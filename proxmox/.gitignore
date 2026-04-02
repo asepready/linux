@@ -1,0 +1,14 @@
+# Secrets — never commit
+*.pem
+.env
+secrets.env
+**/terraform.tfvars
+**/.terraform/
+*.auto.tfvars
+**/vault.yml
+**/group_vars/**/vault
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/

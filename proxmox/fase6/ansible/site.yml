@@ -1,0 +1,31 @@
+---
+# Clone a VM from a template VMID via Proxmox API (POST .../qemu/{id}/clone).
+# Auth: API token header PVEAPIToken=USER@REALM!TOKENID=SECRET
+# Run: ansible-playbook -i inventory.yml site.yml
+
+- name: Clone VM from template on Proxmox (REST API)
+  hosts: localhost
+  gather_facts: false
+  vars:
+    # Build header from parts (see inventory.example.yml)
+    pve_api_token_header: "PVEAPIToken={{ proxmox_api_user }}!{{ proxmox_api_token_id }}={{ proxmox_api_token_secret }}"
+  tasks:
+    - name: Build clone POST body
+      ansible.builtin.set_fact:
+        clone_post_body: "{{ {'newid': new_vmid | string, 'name': vm_name, 'full': clone_full | default(1) | string } | combine({'storage': clone_target_storage} if clone_target_storage is defined else {}) }}"
+
+    - name: Clone QEMU guest from template
+      ansible.builtin.uri:
+        url: "https://{{ proxmox_api_host }}:8006/api2/json/nodes/{{ proxmox_node }}/qemu/{{ template_vmid }}/clone"
+        method: POST
+        body_format: form-urlencoded
+        body: "{{ clone_post_body }}"
+        headers:
+          Authorization: "{{ pve_api_token_header }}"
+        validate_certs: "{{ proxmox_validate_certs | default(false) }}"
+        status_code: [200]
+      register: clone_result
+
+    - name: Show task UPID (async clone)
+      ansible.builtin.debug:
+        msg: "{{ clone_result.json.data }}"

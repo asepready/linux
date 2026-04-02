@@ -1,0 +1,11 @@
+# Copy to terraform.tfvars (gitignored). Do not commit secrets.
+
+proxmox_api_url  = "https://pve.lab.local:8006/api2/json"
+proxmox_user     = "root@pam"
+proxmox_password = "CHANGE_ME"
+
+proxmox_node   = "pve"
+template_name  = "ubuntu-2204-template"
+vm_name        = "tf-clone-test"
+vm_id          = 151
+full_clone     = true
