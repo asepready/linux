@@ -3,16 +3,16 @@ apk add acl bash curl fping git graphviz imagemagick mariadb mariadb-client mtr 
 
 apk add php83-pdo php83-session php83-simplexml php83-sockets php83-dom php83-fileinfo php83-tokenizer
 
-adduser librenms -d /opt/librenms -M -r -s "$(which bash)"
+# Alpine/BusyBox: -h HOME, -S system user, -D no password (not Debian's -d/-M/-r)
+adduser -D -S -h /opt/librenms -s /bin/bash librenms
 
-git clone https://github.com/librenms/librenms.git
-
-chown -R librenms:librenms /opt/librenms
 chmod 771 /opt/librenms
-setfacl -d -m g::rwx /opt/librenms/rrd /opt/librenms/logs /opt/librenms/bootstrap/cache/ /opt/librenms/storage/
-setfacl -R -m g::rwx /opt/librenms/rrd /opt/librenms/logs /opt/librenms/bootstrap/cache/ /opt/librenms/storage/
 
-su - librenms
+su - librenms -s /bin/bash
+git clone https://github.com/librenms/librenms.git .
 ./scripts/composer_wrapper.php install --no-dev
 exit
+
+setfacl -d -m g::rwx /opt/librenms/rrd /opt/librenms/logs /opt/librenms/bootstrap/cache/ /opt/librenms/storage/
+setfacl -R -m g::rwx /opt/librenms/rrd /opt/librenms/logs /opt/librenms/bootstrap/cache/ /opt/librenms/storage/
 ```

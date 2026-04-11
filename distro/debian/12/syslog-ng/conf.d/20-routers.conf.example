@@ -1,0 +1,30 @@
+# Salin ke /etc/syslog-ng/conf.d/20-routers.conf lalu: syslog-ng -s && systemctl reload syslog-ng
+# Log dari sumber jaringan (s_net di 10-conn.conf) → file per host, satu file per hari.
+# Path: /var/log/mikrotik/<HOST>/<TAHUN>-<BULAN>-<HARI>.log
+# Makro tanggal: $R_* = waktu penerimaan di syslog-ng (bukan isi pesan).
+
+destination d_mikrotik {
+    file(
+        "/var/log/mikrotik/${HOST}/$R_YEAR-$R_MONTH-$R_DAY.log"
+        create-dirs(yes)
+        owner("root")
+        group("adm")
+        perm(0640)
+    );
+};
+
+# RouterOS umumnya memakai topik "kategori,level" di awal pesan (contoh: system,info; wireless,info).
+# Sesuaikan jika Anda juga menerima syslog non-Mikrotik di port yang sama.
+filter f_mikrotik {
+    match("mikrotik" value("MSG") flags(ignore-case))
+    or match("system," value("MSG"))
+    or match("wireless," value("MSG"))
+    or match("firewall," value("MSG"))
+    or match("dhcp," value("MSG"))
+    or match("script," value("MSG"))
+    or match("caps," value("MSG"))
+    or match("critical,info,warning," value("MSG"))
+    or match("dns," value("MSG"));
+};
+
+log { source(s_net); filter(f_mikrotik); destination(d_mikrotik); };

@@ -1,0 +1,44 @@
+# Salin ke /etc/syslog-ng/conf.d/21-firewall-dns.conf lalu: syslog-ng -s && systemctl reload syslog-ng
+# Membutuhkan s_net dari 10-conn.conf.example.
+#
+# Memisahkan log RouterOS ke subfolder agar mudah dipantau:
+#   - firewall → IP/port (dari aturan firewall yang log=yes / action=log)
+#   - dns      → query DNS (nama domain/host)
+#
+# Path:
+#   /var/log/mikrotik/<HOST>/firewall/<TAHUN>-<BULAN>-<HARI>.log
+#   /var/log/mikrotik/<HOST>/dns/<TAHUN>-<BULAN>-<HARI>.log
+#
+# Bila 20-routers.conf juga aktif, pesan yang sama bisa tertulis dua kali
+# (file harian gabungan + file firewall/dns). Nonaktifkan salah satu jika ingin tanpa duplikasi.
+
+destination d_mikrotik_firewall {
+    file(
+        "/var/log/mikrotik/${HOST}/firewall/$R_YEAR-$R_MONTH-$R_DAY.log"
+        create-dirs(yes)
+        owner("root")
+        group("adm")
+        perm(0640)
+    );
+};
+
+destination d_mikrotik_dns {
+    file(
+        "/var/log/mikrotik/${HOST}/dns/$R_YEAR-$R_MONTH-$R_DAY.log"
+        create-dirs(yes)
+        owner("root")
+        group("adm")
+        perm(0640)
+    );
+};
+
+filter f_mikrotik_firewall {
+    match("firewall," value("MSG"));
+};
+
+filter f_mikrotik_dns {
+    match("dns," value("MSG"));
+};
+
+log { source(s_net); filter(f_mikrotik_firewall); destination(d_mikrotik_firewall); };
+log { source(s_net); filter(f_mikrotik_dns);     destination(d_mikrotik_dns); };

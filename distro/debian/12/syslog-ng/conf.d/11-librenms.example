@@ -1,0 +1,17 @@
+# Salin ke /etc/syslog-ng/conf.d/11-librenms.conf lalu: syslog-ng -s && systemctl reload syslog-ng
+# Membutuhkan LibreNMS terpasang di /opt/librenms dan skrip syslog.php.
+# s_net: dari 10-conn.conf; s_src: sumber lokal bawaan /etc/syslog-ng/syslog-ng.conf
+
+destination d_librenms {
+    program(
+        "/opt/librenms/syslog.php"
+        template("$HOST||$FACILITY||$PRIORITY||$LEVEL||$TAG||$R_YEAR-$R_MONTH-$R_DAY $R_HOUR:$R_MIN:$R_SEC||$MSG||$PROGRAM\n")
+        template_escape(yes)
+    );
+};
+
+log {
+    source(s_net);
+    source(s_src);
+    destination(d_librenms);
+};

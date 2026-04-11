@@ -1,0 +1,5 @@
+source s_net {
+    network( transport("udp") port(514) );
+    network( transport("tcp") port(514) );
+};
+
