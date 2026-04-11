@@ -1,0 +1,9 @@
+# Salin ke /etc/mysql/mariadb.conf.d/99-librenms.cnf (atau gabungkan ke 50-server.cnf).
+# Rujukan: https://docs.librenms.org/Installation/Install-LibreNMS/#configure-mariadb
+#
+# Pada Debian 12, upstream menambahkan opsi di bawah [mysqld].
+# Restart: systemctl restart mariadb
+
+[mysqld]
+innodb_file_per_table=1
+lower_case_table_names=0

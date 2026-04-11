@@ -1,0 +1,8 @@
+-- Jalankan sebagai root MariaDB: mysql -u root < librenms-init.sql
+-- Ganti kata sandi sebelum dipakai. Rujukan:
+-- https://docs.librenms.org/Installation/Install-LibreNMS/#configure-mariadb
+
+CREATE DATABASE librenms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'librenms'@'localhost' IDENTIFIED BY 'GANTI_DENGAN_KATA_SANDI_KUAT';
+GRANT ALL PRIVILEGES ON librenms.* TO 'librenms'@'localhost';
+FLUSH PRIVILEGES;

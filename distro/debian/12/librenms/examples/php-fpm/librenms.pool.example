@@ -1,0 +1,22 @@
+; Salin ke /etc/php/8.2/fpm/pool.d/librenms.conf
+; Asal: salin /etc/php/8.2/fpm/pool.d/www.conf lalu sesuaikan seperti dokumentasi resmi.
+; Rujukan: https://docs.librenms.org/Installation/Install-LibreNMS/#configure-php-fpm
+;
+; Perubahan wajib menurut upstream:
+;   [librenms], user/group = librenms, listen = /run/php-fpm-librenms.sock
+;
+; listen.owner/group www-data: agar worker NGINX (biasanya www-data) dapat memakai socket.
+
+[librenms]
+user = librenms
+group = librenms
+listen = /run/php-fpm-librenms.sock
+listen.owner = www-data
+listen.group = www-data
+listen.mode = 0660
+
+pm = dynamic
+pm.max_children = 50
+pm.start_servers = 5
+pm.min_spare_servers = 5
+pm.max_spare_servers = 35
