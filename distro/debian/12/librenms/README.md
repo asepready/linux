@@ -33,6 +33,7 @@ Panduan ini merangkum instalasi **LibreNMS** pada **Debian 12** dengan **NGINX**
     - [Aktifkan HTTPS (NGINX + Let’s Encrypt)](#aktifkan-https-nginx--lets-encrypt)
     - [Cookie sesi aman](#cookie-sesi-aman)
     - [Reverse proxy terpercaya](#reverse-proxy-terpercaya)
+    - [Checklist keamanan produksi](#checklist-keamanan-produksi)
 18. [Syslog ke LibreNMS (opsional)](#syslog-ke-librenms-opsional)
 
 ---
@@ -284,6 +285,8 @@ exit
 
 Dokumentasi resmi LibreNMS: **[Security information](https://docs.librenms.org/General/Security/)** (HTTPS, cookie sesi, proxy terpercaya). Peringatan instalasi: [Final steps](https://docs.librenms.org/Installation/Install-LibreNMS/#final-steps) — skema awal panduan ini **HTTP port 80**; untuk produksi batasi akses (firewall/VPN) dan gunakan **HTTPS**.
 
+**Checklist berlapis** (urutan firewall/HTTPS/`.env`, lalu SNMP, API, DB, backup): lihat [SECURITY-HARDENING.md](SECURITY-HARDENING.md).
+
 ### Ringkasan resmi
 
 Menurut [General/Security](https://docs.librenms.org/General/Security/):
@@ -335,6 +338,10 @@ Ini memaksa cookie sesi hanya lewat saluran aman dan mengurangi risiko penyadapa
 
 Jika LibreNMS berada di belakang proxy pembalik (misalnya load balancer), atur `APP_TRUSTED_PROXIES` di `.env` ke string kosong atau ke daftar host proxy yang diizinkan meneruskan header — lihat [Trusted Proxies](https://docs.librenms.org/General/Security/#trusted-proxies).
 
+### Checklist keamanan produksi
+
+Ringkasan urutan dan lapisan tambahan (SNMPv3, API, MariaDB, backup): **[SECURITY-HARDENING.md](SECURITY-HARDENING.md)**.
+
 ### Pelaporan kerentanan
 
 Jika Anda menemukan kerentanan keamanan pada LibreNMS, ikuti arahan resmi di bagian *Reporting vulnerabilities* pada [Security information](https://docs.librenms.org/General/Security/#reporting-vulnerabilities).
@@ -357,6 +364,7 @@ Pastikan dokumentasi LibreNMS untuk syslog diperiksa: [Syslog](https://docs.libr
 | Topik | URL resmi |
 | ----- | --------- |
 | Instalasi penuh | [Install-LibreNMS](https://docs.librenms.org/Installation/Install-LibreNMS/) |
+| Checklist keamanan (lokal) | [SECURITY-HARDENING.md](SECURITY-HARDENING.md) |
 | Keamanan (HTTPS, cookie, proxy) | [Security information](https://docs.librenms.org/General/Security/) |
 | Konfigurasi | [Support/Configuration](https://docs.librenms.org/Support/Configuration/) |
 | Pembaruan | [Updating](https://docs.librenms.org/General/Updating/) |
