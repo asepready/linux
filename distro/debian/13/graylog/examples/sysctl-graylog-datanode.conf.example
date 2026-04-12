@@ -1,0 +1,3 @@
+# Graylog Data Node / OpenSearch: kernel minimum for mmap (persist to e.g. /etc/sysctl.d/99-graylog-datanode.conf)
+# See distro/debian/13/graylog/README.md — Data Node section.
+vm.max_map_count=262144
