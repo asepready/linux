@@ -1,4 +1,0 @@
-# Debian 12 (Bookworm) + NGINX — satu baris seperti dokumentasi resmi LibreNMS.
-# Rujukan: https://docs.librenms.org/Installation/Install-LibreNMS/#install-required-packages
-
-apt install acl ca-certificates curl fping git lsb-release mariadb-client mariadb-server mtr-tiny nginx-full nmap php-cli php-curl php-fpm php-gd php-gmp php-mbstring php-mysql php-snmp php-xml php-zip python3-dotenv python3-pip python3-psutil python3-pymysql python3-redis python3-setuptools python3-systemd rrdtool snmp snmpd unzip wget whois
